@@ -24,11 +24,12 @@
     "netlistsvg-dumplayout": "./bin/exportLayout.js"
   },
   "scripts": {
+    "build": "tsc",
+    "build:bundle": "node scripts/build-bundle.js",
+    "build:demo": "npm run build:bundle && esbuild demo/demo.js --bundle --outfile=bundle.js --platform=browser --external:elkjs && cp demo/index.html . && cp node_modules/elkjs/lib/elk.bundled.js .",
     "test-examples": "tsc && node --trace-warnings test/test-all.js",
     "lint": "eslint lib/**/*.ts && eslint bin/**/*.js",
-    "test": "npm run -s test-examples && npm run -s lint && jest",
-    "build-demo": "cp demo/index.html . && cp node_modules/elkjs/lib/elk.bundled.js . && browserify demo/demo.js > bundle.js",
-    "build-module": "browserify -t brfs -s netlistsvg jsmodule/index.js > built/netlistsvg.bundle.js"
+    "test": "npm run -s test-examples && npm run -s lint && jest"
   },
   "keywords": [
     "svg",
@@ -44,17 +45,10 @@
     "@types/node": "^22.13.10",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
+    "esbuild": "^0.27.4",
     "eslint": "^8.57.1",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.6",
     "typescript": "^5.7.3"
-  },
-  "browserify-shim": {
-    "elkjs": "global:ELK"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
   }
 }
