@@ -29,7 +29,9 @@
     "build:demo": "npm run build:bundle && esbuild demo/demo.js --bundle --outfile=bundle.js --platform=browser --external:elkjs && cp demo/index.html . && cp node_modules/elkjs/lib/elk.bundled.js .",
     "test-examples": "tsc && node --trace-warnings test/test-all.js",
     "lint": "eslint lib/**/*.ts && eslint bin/**/*.js",
-    "test": "npm run -s test-examples && npm run -s lint && jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:examples": "tsc && node --trace-warnings test/test-all.js"
   },
   "keywords": [
     "svg",
