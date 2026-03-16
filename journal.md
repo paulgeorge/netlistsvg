@@ -120,3 +120,15 @@
   - Fixed: test/examples.test.ts needed json5 for analog test files with trailing commas
   - Fixed: jest.config.js typo coverageThresholds -> coverageThreshold
   - Fixed: test/YosysModel.test.ts strict mode type error with ConstantVal enum
+
+## 2026-03-16 14:42:59
+- Expanded test suite from 9 tests (3 suites) to 83 tests (12 suites)
+- Added unit tests: Port.test.ts, Skin.test.ts, YosysModel.test.ts, elkGraph.test.ts, index.test.ts
+- Added integration tests: cli.test.ts (CLI end-to-end), examples.test.ts (all 11 digital+analog examples)
+- Added edge case tests: malformed JSON, empty netlists, invalid skins, FlatModule utilities
+- Added snapshot tests for mux4, up3down5, hyperedges, resistor_divider SVG output
+- Updated jest.config.js with coverage collection and 80% line threshold
+- Added test:coverage script to package.json
+- Coverage results: 94.04% lines, 87.6% branches, 96.25% functions, 94.2% statements
+- All 83 tests pass, 4 snapshots written
+- Committed in 4 logical commits
