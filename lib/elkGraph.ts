@@ -1,5 +1,4 @@
 import { FlatModule } from './FlatModule';
-import _ = require('lodash');
 
 export namespace ElkModel {
     interface WireNameLookup {
@@ -90,7 +89,7 @@ export function buildElkGraph(module: FlatModule): ElkModel.Graph {
     });
     ElkModel.edgeIndex = 0;
     ElkModel.dummyNum = 0;
-    const edges: ElkModel.Edge[] = _.flatMap(module.wires, (w) => {
+    const edges: ElkModel.Edge[] = module.wires.flatMap((w) => {
         const numWires = w.netName.split(',').length - 2;
         // at least one driver and at least one rider and no laterals
         if (w.drivers.length > 0 && w.riders.length > 0 && w.laterals.length === 0) {
@@ -109,7 +108,7 @@ export function buildElkGraph(module: FlatModule): ElkModel.Graph {
             const dummyId: string = addDummy(children);
             ElkModel.dummyNum += 1;
             const dummyEdges: ElkModel.Edge[] = w.drivers.map((driver) => {
-                const sourceParentKey: string = driver.parentNode.Key;
+                const sourceParentKey: string = driver.parentNode!.Key;
                 const id: string = 'e' + String(ElkModel.edgeIndex);
                 ElkModel.edgeIndex += 1;
                 const d: ElkModel.Edge = {
@@ -119,7 +118,7 @@ export function buildElkGraph(module: FlatModule): ElkModel.Graph {
                     target: dummyId,
                     targetPort: dummyId + '.p',
                 };
-                ElkModel.wireNameLookup[id] = driver.wire.netName;
+                ElkModel.wireNameLookup[id] = driver.wire!.netName;
                 return d;
             });
 
@@ -130,7 +129,7 @@ export function buildElkGraph(module: FlatModule): ElkModel.Graph {
             const dummyId: string = addDummy(children);
             ElkModel.dummyNum += 1;
             const dummyEdges: ElkModel.Edge[] = w.riders.map((rider) => {
-                const sourceParentKey: string = rider.parentNode.Key;
+                const sourceParentKey: string = rider.parentNode!.Key;
                 const id: string = 'e' + String(ElkModel.edgeIndex);
                 ElkModel.edgeIndex += 1;
                 const edge: ElkModel.Edge = {
@@ -140,15 +139,15 @@ export function buildElkGraph(module: FlatModule): ElkModel.Graph {
                     target: sourceParentKey,
                     targetPort: sourceParentKey + '.' + rider.key,
                 };
-                ElkModel.wireNameLookup[id] = rider.wire.netName;
+                ElkModel.wireNameLookup[id] = rider.wire!.netName;
                 return edge;
             });
             return dummyEdges;
         } else if (w.laterals.length > 1) {
             const source = w.laterals[0];
-            const sourceParentKey: string = source.parentNode.Key;
+            const sourceParentKey: string = source.parentNode!.Key;
             const lateralEdges: ElkModel.Edge[] = w.laterals.slice(1).map((lateral) => {
-                const lateralParentKey: string = lateral.parentNode.Key;
+                const lateralParentKey: string = lateral.parentNode!.Key;
                 const id: string = 'e' + String(ElkModel.edgeIndex);
                 ElkModel.edgeIndex += 1;
                 const edge: ElkModel.Edge = {
@@ -158,7 +157,7 @@ export function buildElkGraph(module: FlatModule): ElkModel.Graph {
                     target: lateralParentKey,
                     targetPort: lateralParentKey + '.' + lateral.key,
                 };
-                ElkModel.wireNameLookup[id] = lateral.wire.netName;
+                ElkModel.wireNameLookup[id] = lateral.wire!.netName;
                 return edge;
             });
             return lateralEdges;
@@ -190,8 +189,8 @@ function addDummy(children: ElkModel.Cell[]) {
     return dummyId;
 }
 
-function route(sourcePorts, targetPorts, edges: ElkModel.Edge[], numWires) {
-    const newEdges: ElkModel.Edge[] = (_.flatMap(sourcePorts, (sourcePort) => {
+function route(sourcePorts: any[], targetPorts: any[], edges: (ElkModel.Edge | ElkModel.ExtendedEdge)[], numWires: number) {
+    const newEdges = (sourcePorts.flatMap((sourcePort: any) => {
         const sourceParentKey: string = sourcePort.parentNode.key;
         const sourceKey: string = sourceParentKey + '.' + sourcePort.key;
         let edgeLabel: ElkModel.Label[];
@@ -208,7 +207,7 @@ function route(sourcePorts, targetPorts, edges: ElkModel.Edge[], numWires) {
                 },
             }];
         }
-        return targetPorts.map((targetPort) => {
+        return targetPorts.map((targetPort: any) => {
             const targetParentKey: string = targetPort.parentNode.key;
             const targetKey: string = targetParentKey + '.' + targetPort.key;
             const id: string = 'e' + ElkModel.edgeIndex;

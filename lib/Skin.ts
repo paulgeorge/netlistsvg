@@ -4,10 +4,10 @@ import { ElkModel } from './elkGraph';
 
 export namespace Skin {
 
-    export let skin: onml.Element = null;
+    export let skin: onml.Element = null as any;
 
     export function getPortsWithPrefix(template: any[], prefix: string) {
-        const ports = template.filter((e) => {
+        const ports = template.filter((e: any) => {
             try {
                 if (e instanceof Array && e[0] === 'g') {
                     return e[1]['s:pid'].startsWith(prefix);
@@ -20,7 +20,7 @@ export namespace Skin {
         return ports;
     }
 
-    function filterPortPids(template, filter): string[] {
+    function filterPortPids(template: any, filter: (attrs: any) => boolean): string[] {
         const ports = template.filter((element: any[]) => {
             const tag: string = element[0];
             if (element instanceof Array && tag === 'g') {
@@ -29,13 +29,13 @@ export namespace Skin {
             }
             return false;
         });
-        return ports.map((port) => {
+        return ports.map((port: any) => {
             return port[1]['s:pid'];
         });
     }
 
-    export function getInputPids(template): string[] {
-        return filterPortPids(template, (attrs) => {
+    export function getInputPids(template: any): string[] {
+        return filterPortPids(template, (attrs: any) => {
             if (attrs['s:position']) {
                 return attrs['s:position'] === 'top';
             }
@@ -43,8 +43,8 @@ export namespace Skin {
         });
     }
 
-    export function getOutputPids(template): string[] {
-        return filterPortPids(template, (attrs) => {
+    export function getOutputPids(template: any): string[] {
+        return filterPortPids(template, (attrs: any) => {
             if (attrs['s:position']) {
                 return attrs['s:position'] === 'bottom';
             }
@@ -52,8 +52,8 @@ export namespace Skin {
         });
     }
 
-    export function getLateralPortPids(template): string[] {
-        return filterPortPids(template, (attrs) => {
+    export function getLateralPortPids(template: any): string[] {
+        return filterPortPids(template, (attrs: any) => {
             if (attrs['s:dir']) {
                 return attrs['s:dir'] === 'lateral';
             }
@@ -66,9 +66,9 @@ export namespace Skin {
     }
 
     export function findSkinType(type: string) {
-        let ret = null;
+        let ret: any = null;
         onml.traverse(skin, {
-            enter: (node, parent) => {
+            enter: (node: any, parent: any) => {
                 if (node.name === 's:alias' && node.attr.val === type) {
                     ret = parent;
                 }
@@ -76,20 +76,20 @@ export namespace Skin {
         });
         if (ret == null) {
             onml.traverse(skin, {
-                enter: (node) => {
+                enter: (node: any) => {
                     if (node.attr['s:type'] === 'generic') {
                         ret = node;
                     }
                 },
             });
         }
-        return ret.full;
+        return ret!.full;
     }
 
     export function getLowPriorityAliases(): string[] {
-        const ret = [];
+        const ret: string[] = [];
         onml.t(skin, {
-            enter: (node) => {
+            enter: (node: any) => {
                 if (node.name === 's:low_priority_alias') {
                     ret.push(node.attr.value);
                 }
@@ -102,12 +102,12 @@ export namespace Skin {
     }
 
     export function getProperties(): SkinProperties {
-        let vals;
+        let vals: SkinProperties | undefined;
         onml.t(skin, {
-            enter: (node) => {
+            enter: (node: any) => {
                 if (node.name === 's:properties') {
                     vals = Object.fromEntries(
-                        Object.entries(node.attr).map(([key, val]: [string, string]) => {
+                        Object.entries(node.attr as Record<string, string>).map(([key, val]) => {
                             if (!isNaN(Number(val))) {
                                 return [key, Number(val)];
                             }
@@ -121,16 +121,16 @@ export namespace Skin {
                         }),
                     );
                 } else if (node.name === 's:layoutEngine') {
-                    vals.layoutEngine = node.attr;
+                    vals!.layoutEngine = node.attr;
                 }
             },
         });
 
-        if (!vals.layoutEngine) {
-            vals.layoutEngine = {};
+        if (!vals!.layoutEngine) {
+            vals!.layoutEngine = {};
         }
 
-        return vals;
+        return vals!;
     }
 }
 export default Skin;

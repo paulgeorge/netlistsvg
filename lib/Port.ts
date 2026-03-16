@@ -1,7 +1,6 @@
 import Cell from './Cell';
 import {SigsByConstName} from './FlatModule';
 import Yosys from './YosysModel';
-import _ = require('lodash');
 import { ElkModel } from './elkGraph';
 
 export class Port {
@@ -19,11 +18,11 @@ export class Port {
     }
 
     public keyIn(pids: string[]): boolean {
-        return _.includes(pids, this.key);
+        return pids.includes(this.key);
     }
 
     public maxVal() {
-        return _.max(_.map(this.value, (v) => Number(v)));
+        return Math.max(...this.value.map((v) => Number(v)));
     }
 
     public valString() {
@@ -73,8 +72,8 @@ export class Port {
         templatePorts: any[],
         dir: string,
     ): ElkModel.Port {
-        const nkey = this.parentNode.Key;
-        const type = this.parentNode.getTemplate()[1]['s:type'];
+        const nkey = this.parentNode!.Key;
+        const type = this.parentNode!.getTemplate()[1]['s:type'];
         if (index === 0) {
             const ret: ElkModel.Port = {
                 id: nkey + '.' + this.key,

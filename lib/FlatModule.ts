@@ -17,12 +17,12 @@ export interface Wire {
 }
 
 export class FlatModule {
-    public moduleName: string;
+    public moduleName!: string;
     public nodes: Cell[];
     public wires: Wire[];
 
     constructor(netlist: Yosys.Netlist) {
-        this.moduleName = null;
+        this.moduleName = null as any;
         for (const [name, mod] of Object.entries(netlist.modules)) {
             if (mod.attributes && Number(mod.attributes.top) === 1) {
                 this.moduleName = name;
