@@ -2,7 +2,6 @@ import { SigsByConstName, NameToPorts, addToDefaultDict } from './FlatModule';
 import Yosys from './YosysModel';
 import Skin from './Skin';
 import {Port} from './Port';
-import _ = require('lodash');
 import { ElkModel } from './elkGraph';
 import clone = require('clone');
 import onml = require('onml');
@@ -26,7 +25,7 @@ export default class Cell {
         const template = Skin.findSkinType(yCell.type);
         const templateInputPids = Skin.getInputPids(template);
         const templateOutputPids = Skin.getOutputPids(template);
-        const ports: Port[] = _.map(yCell.connections, (conn, portName) => {
+        const ports: Port[] = Object.entries(yCell.connections).map(([portName, conn]) => {
             return new Port(portName, conn);
         });
         let inputPorts = ports.filter((port) => port.keyIn(templateInputPids));
@@ -133,8 +132,8 @@ export default class Cell {
     }
 
     public maxOutVal(atLeast: number): number {
-        const maxVal: number = _.max(this.outputPorts.map((op) => op.maxVal()));
-        return _.max([maxVal, atLeast]);
+        const maxVal: number = Math.max(...this.outputPorts.map((op) => op.maxVal()));
+        return Math.max(maxVal, atLeast);
     }
 
     public findConstants(sigsByConstantName: SigsByConstName,

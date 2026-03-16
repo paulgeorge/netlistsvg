@@ -1,0 +1,67 @@
+## 2026-03-16 13:59:12
+- Researched upstream nturley/netlistsvg repository via GitHub API
+- Gathered repo stats: 774 stars, 103 forks, 48 total issues, 7 total PRs
+- Last commit was 2024-01-25 (over 2 years ago), project appears effectively unmaintained
+- 30 open issues, 5 open PRs (oldest from 2018), no maintainer responses to recent issues
+- Key finding: Issue #147 "Is this the actual repository?" confirms community concern about maintenance status
+- Issue #120 requesting a new release (from 2022) went unanswered by maintainer
+- Multiple dependency/build issues reported (#145, #136) with no maintainer action
+
+## 2026-03-16 14:00:06
+- Researched all forks of nturley/netlistsvg via GitHub API (97+ forks total)
+- Identified the most active and divergent forks:
+  - **Laxer3a/netlistsvg**: 55 commits ahead, porting ELK layout engine to C++ (Nov 2025)
+  - **vzaccaria/netlistsvg**: 210 commits ahead (87 behind), heavily diverged for educational use (flip-flop annotations, wavedrom, register naming)
+  - **Silimate/netlistsvg**: 12 commits ahead, VSCode integration with coloring support (May 2025)
+  - **ajsb85/netlistsvg**: 5 commits ahead, TypeScript best practices, lodash removal, dependency updates (Jan 2026)
+  - **OffCourseOrg/netlistsvg-offcourse**: 7 commits ahead, skin customizations (Dec 2024)
+  - **kammoh/netlistsvg**: 4 commits ahead, dependency updates and TS compilation fixes (Mar 2025)
+- Only 3 forks have stars: dvc94ch (2), nobodywasishere (2), and several with 1 star
+- No single fork has emerged as a clear community successor
+- Most forks are either identical to upstream or only trivially different
+
+## 2026-03-16 14:00:31
+- Researched broader netlistsvg ecosystem: npm packages, downstream dependents, download stats
+- **npm packages found:**
+  - `netlistsvg` v1.0.2 (original, last published 2020-12-12 by nturley): ~9,269 downloads/year, ~1,206/month
+  - `@silimate/netlistsvg` v1.1.4 (fork by Silimate, published 2025-05-30): ~1,379 downloads/year, ~138/month
+  - Silimate fork has 13 versions, updated deps (elkjs 0.7, ajv 8, yargs 17, onml 2), unpacked size 3.5MB vs 1.5MB
+- **Silimate fork source:** `Silimate/netlistsvg` on GitHub (fork of nturley), 12 commits ahead, 0 stars, pushed May 2025
+  - Maintainers: akashlevy (akash@silimate.com) and stanminlee (stan@silimate.com)
+  - Appears built for VSCode integration with coloring/styling support
+- **Downstream dependents (16 repos reference netlistsvg in package.json):**
+  - Most notable: TerosTechnology/vscode-terosHDL (702 stars, VHDL/Verilog IDE)
+  - Others: magia-hdl/magia-playground-syn, lesc-ufv/cad4u, Badel2/comphdl, nipscernlab/aurora
+- **Other ecosystem projects:**
+  - one-ware/OneWare.NetlistSVG: integration plugin for OneWare IDE (1 star)
+  - scwirq/netlistsvg: independent project showing module info (5 stars)
+  - sifferman/sky130_netlistsvg: transistor schematics for sky130 PDK
+  - tnichols217/obsidian-netlistsvg: Obsidian plugin
+- **Key finding:** The original `netlistsvg` npm package remains dominant (~87% of downloads). No fork has gained significant traction as a replacement.
+
+## 2026-03-16 14:02:06
+- Performed comprehensive web search and GitHub API research for notable/maintained netlistsvg forks
+- Web searches: "netlistsvg fork maintained", "netlistsvg alternative updated", "nturley netlistsvg fork", "netlistsvg 2024/2025", "netlistsvg digital circuit schematic svg"
+- **Original repo status:** Last commit 2024-01-25, 774 stars, 103 forks, 55 open issues, 7 open PRs (oldest from 2018). Effectively unmaintained.
+- **Most notable forks with actual divergent work:**
+  - **ajsb85/netlistsvg** (1 star): Most promising for a clean modernization. 5 commits ahead: removed lodash, TypeScript best practices, dependency updates, skin folder reorganization. Last push Jan 2026.
+  - **Silimate/netlistsvg**: Published as `@silimate/netlistsvg` on npm (13 versions). VSCode integration, coloring support. 12 commits ahead. Last push May 2025.
+  - **Laxer3a/netlistsvg** (0 stars): Experimental C++ port of ELK layout engine. 55 commits ahead. Last push Nov 2025. Highly experimental, AI-assisted PRs.
+  - **vzaccaria/netlistsvg** (1 star): Heavily diverged (210 commits ahead, 87 behind) for educational use. Flip-flop annotations, wavedrom integration. Last push Sep 2024.
+  - **kammoh/netlistsvg** (0 stars): Dependency updates and TS compilation fixes. Last push Mar 2025.
+  - **scwirq/netlistsvg** (5 stars): Modified to show module information. But last push 2019, stale.
+- **Blog/community:** blog.eowyn.net "Improving netlistsvg" by nobodywasishere documents improvements but fork hasn't been updated since 2022.
+- **Related projects:** OneWare.NetlistSVG (IDE integration plugin), Sphinx HDL Diagrams (docs integration)
+- **Conclusion:** No fork has emerged as a clear successor. ajsb85 is the closest to a "modernized original" with clean dependency updates. Silimate is the only one with a published npm package. For our purposes, forking from the original nturley/netlistsvg master is still the best starting point, potentially cherry-picking improvements from ajsb85 (lodash removal, dep updates).
+
+## 2026-03-16 14:12:37
+- Created fork: https://github.com/paulgeorge/netlistsvg (forked from nturley/netlistsvg)
+- Cloned fork into /home/paul/projects/netlistsvg/ with origin + upstream remotes configured
+- Remotes: origin → paulgeorge/netlistsvg, upstream → nturley/netlistsvg
+- Starting point: master branch at commit d3518f1 (Jan 2024 - last upstream commit)
+- Next steps for modernization:
+  - Cherry-pick ajsb85's lodash removal and dependency updates
+  - Review and merge valuable open PRs (#121 stack overflow fix, #92 hierarchical netlists)
+  - Update npm dependencies and fix build issues (#145)
+  - Add package-lock.json (#136)
+  - Update CI from Node 14 to modern Node versions

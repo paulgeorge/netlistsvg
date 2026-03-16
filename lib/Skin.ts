@@ -1,6 +1,5 @@
 
 import onml = require('onml');
-import _ = require('lodash');
 import { ElkModel } from './elkGraph';
 
 export namespace Skin {
@@ -8,7 +7,7 @@ export namespace Skin {
     export let skin: onml.Element = null;
 
     export function getPortsWithPrefix(template: any[], prefix: string) {
-        const ports = _.filter(template, (e) => {
+        const ports = template.filter((e) => {
             try {
                 if (e instanceof Array && e[0] === 'g') {
                     return e[1]['s:pid'].startsWith(prefix);
@@ -16,12 +15,13 @@ export namespace Skin {
             } catch (exception) {
                 // Do nothing if the SVG group doesn't have a pin id.
             }
+            return false;
         });
         return ports;
     }
 
     function filterPortPids(template, filter): string[] {
-        const ports = _.filter(template, (element: any[]) => {
+        const ports = template.filter((element: any[]) => {
             const tag: string = element[0];
             if (element instanceof Array && tag === 'g') {
                 const attrs: any = element[1];
@@ -106,18 +106,20 @@ export namespace Skin {
         onml.t(skin, {
             enter: (node) => {
                 if (node.name === 's:properties') {
-                    vals = _.mapValues(node.attr, (val: string) => {
-                        if (!isNaN(Number(val))) {
-                            return Number(val);
-                        }
-                        if (val === 'true') {
-                            return true;
-                        }
-                        if (val === 'false') {
-                            return false;
-                        }
-                        return val;
-                    });
+                    vals = Object.fromEntries(
+                        Object.entries(node.attr).map(([key, val]: [string, string]) => {
+                            if (!isNaN(Number(val))) {
+                                return [key, Number(val)];
+                            }
+                            if (val === 'true') {
+                                return [key, true];
+                            }
+                            if (val === 'false') {
+                                return [key, false];
+                            }
+                            return [key, val];
+                        }),
+                    );
                 } else if (node.name === 's:layoutEngine') {
                     vals.layoutEngine = node.attr;
                 }
