@@ -65,3 +65,17 @@
   - Update npm dependencies and fix build issues (#145)
   - Add package-lock.json (#136)
   - Update CI from Node 14 to modern Node versions
+
+## 2026-03-16 14:25:07
+- Reviewed all 7 open PRs on upstream nturley/netlistsvg
+- Applied 4 PRs that were clean and valuable:
+  - PR #151: fix --layout option returning undefined (bug fix)
+  - PR #137: README Homebrew installation docs
+  - PR #121: Refactor FlatModule.gather from recursion to iteration (stack overflow fix for large netlists)
+  - PR #75: Add value text label to generic analog component
+- Skipped 3 PRs:
+  - PR #124: Nix flake support (outdated generated files, nodejs-12_x)
+  - PR #92: Hierarchical netlists (4500-line PR, many conflicts, needs dedicated porting effort)
+  - PR #40: Auto orient analog (pre-TypeScript, missing files, brute-force 2^n approach)
+- Written report to docs/pr-review-report.md
+- Note: PR #121 also removed lodash from Cell.ts as part of its changes
