@@ -107,3 +107,16 @@
   - Downgraded pre-existing lint issues to warnings in .eslintrc.yml
   - All tests pass, bundle builds correctly (496K), npm audit clean
   - Committed in 2 logical commits
+
+## 2026-03-16 14:43:03
+- Completed end-to-end build pipeline verification (Task #12):
+  - npm ci: clean install from lockfile, 390 packages, 0 vulnerabilities
+  - npx tsc: TypeScript compilation clean
+  - npm run build:bundle: esbuild browser bundle builds successfully
+  - npm test: 12 test suites, 83 tests all passing (including new tests from test-architect)
+  - npm audit: 0 vulnerabilities
+  - CLI test: `node bin/netlistsvg.js test/digital/mux4.json -o /tmp/test-output.svg` produces 7091-byte valid SVG
+  - --layout flag test: exportLayout.js generates ELK layout, netlistsvg.js consumes it successfully
+  - Fixed: test/examples.test.ts needed json5 for analog test files with trailing commas
+  - Fixed: jest.config.js typo coverageThresholds -> coverageThreshold
+  - Fixed: test/YosysModel.test.ts strict mode type error with ConstantVal enum
