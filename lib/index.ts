@@ -11,7 +11,7 @@ import drawModule from './drawModule';
 
 const elk = new ELK();
 
-type ICallback = (error: Error, result?: string) => void;
+type ICallback = (error: Error | null, result?: string) => void;
 
 function createFlatModule(skinData: string, yosysNetlist: Yosys.Netlist): FlatModule {
     Skin.skin = onml.p(skinData);
@@ -50,7 +50,7 @@ export function render(skinData: string, yosysNetlist: Yosys.Netlist, done?: ICa
     const kgraph: ElkModel.Graph = buildElkGraph(flatModule);
     const layoutProps = Skin.getProperties();
 
-    let promise;
+    let promise: Promise<string | void>;
     // if we already have a layout then use it
     if (elkData) {
         promise = new Promise<string>((resolve) => {
@@ -60,15 +60,14 @@ export function render(skinData: string, yosysNetlist: Yosys.Netlist, done?: ICa
     } else {
         // otherwise use ELK to generate the layout
         promise = elk.layout(kgraph, { layoutOptions: layoutProps.layoutEngine })
-            .then((g) => drawModule(g, flatModule))
-            // tslint:disable-next-line:no-console
-            .catch((e) => { console.error(e); });
+            .then((g: any) => drawModule(g, flatModule))
+            .catch((e: any) => { console.error(e); });
     }
 
     // support legacy callback style
     if (typeof done === 'function') {
-        promise.then((output: string) => {
-            done(null, output);
+        promise.then((output) => {
+            done(null, output as string);
             return output;
         }).catch((reason) => {
             throw Error(reason);
