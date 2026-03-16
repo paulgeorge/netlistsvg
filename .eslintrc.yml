@@ -1,19 +1,22 @@
-env:
-  node: true
-  es6: true
-extends: 'eslint:recommended'
+root: true
+parser: "@typescript-eslint/parser"
+plugins:
+  - "@typescript-eslint"
+parserOptions:
+  project: "./tsconfig.json"
+extends:
+  - eslint:recommended
+  - plugin:@typescript-eslint/recommended
 rules:
-  indent:
-    - error
-    - 4
-  linebreak-style:
-    - error
-    - unix
-  quotes:
-    - error
-    - single
-  semi:
-    - error
-    - always
-  no-redeclare:
-    - off
+  "@typescript-eslint/no-explicit-any": "off"
+  "@typescript-eslint/no-namespace": "off"
+  no-case-declarations: "off"
+  prefer-const: "warn"
+overrides:
+  - files: ["bin/**/*.js"]
+    env:
+      node: true
+    parserOptions:
+      project: null
+    rules:
+      "@typescript-eslint/no-var-requires": "off"
