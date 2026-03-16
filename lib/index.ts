@@ -53,9 +53,9 @@ export function render(skinData: string, yosysNetlist: Yosys.Netlist, done?: ICa
     let promise;
     // if we already have a layout then use it
     if (elkData) {
-        promise = new Promise<void>((resolve) => {
-            drawModule(elkData, flatModule);
-            resolve();
+        promise = new Promise<string>((resolve) => {
+            const result = drawModule(elkData, flatModule);
+            resolve(result);
         });
     } else {
         // otherwise use ELK to generate the layout
