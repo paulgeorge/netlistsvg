@@ -191,3 +191,15 @@
 - Fix 6: `lib/elkGraph.ts` — use public `.Key` getter instead of private `.key` in `route()` function
 - Fix 7: `lib/drawModule.ts` — add null guard for `wireNameLookup` lookups in edge processing loops
 - All 12 test suites pass (83 tests, 4 snapshots)
+
+## 2026-03-17 14:40:45
+- Upgraded ESLint 8 to ESLint 9 with flat config (`eslint.config.mjs`)
+  - Uninstalled: `eslint@^8`, `@typescript-eslint/parser`, `@typescript-eslint/eslint-plugin`
+  - Installed: `eslint@^9`, `@eslint/js@^9`, `typescript-eslint@^8`
+  - Deleted `.eslintrc.yml`, created `eslint.config.mjs` with equivalent rules
+  - Had to disable `@typescript-eslint/no-require-imports` (new default in v8) since codebase uses `import = require()` pattern
+  - Removed stale `eslint-disable` comments: `no-inner-declarations` no longer flagged in ESLint 9
+  - Removed unused `exception` catch binding in `Skin.ts` (now uses bare `catch`)
+  - Combined lint script into single `eslint` call
+- Fixed noisy ENOENT stderr in CLI tests by piping stdio in the nonexistent file test
+- All 12 test suites pass, zero lint warnings/errors
