@@ -118,28 +118,6 @@ export default function drawModule(g: ElkModel.Graph, module: FlatModule) {
     return onml.s(ret as onml.Element);
 }
 
-function which_dir(start: ElkModel.WirePoint, end: ElkModel.WirePoint): WireDirection {
-    if (end.x === start.x && end.y === start.y) {
-        throw new Error('start and end are the same');
-    }
-    if (end.x !== start.x && end.y !== start.y) {
-        throw new Error('start and end arent orthogonal');
-    }
-    if (end.x > start.x) {
-        return WireDirection.Right;
-    }
-    if (end.x < start.x) {
-        return WireDirection.Left;
-    }
-    if (end.y > start.y) {
-        return WireDirection.Down;
-    }
-    if (end.y < start.y) {
-        return WireDirection.Up;
-    }
-    throw new Error('unexpected direction');
-}
-
 function findBendNearDummy(
         net: ElkModel.Edge[],
         dummyIsSource: boolean,
