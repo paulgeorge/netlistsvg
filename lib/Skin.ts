@@ -13,7 +13,7 @@ export namespace Skin {
                 if (e instanceof Array && e[0] === 'g') {
                     return e[1]['s:pid'].startsWith(prefix);
                 }
-            } catch (exception) {
+            } catch {
                 // Do nothing if the SVG group doesn't have a pin id.
             }
             return false;
@@ -21,7 +21,6 @@ export namespace Skin {
         return ports;
     }
 
-    // eslint-disable-next-line no-inner-declarations
     function filterPortPids(template: any, filter: (attrs: any) => boolean): string[] {
         const ports = template.filter((element: any[]) => {
             const tag: string = element[0];

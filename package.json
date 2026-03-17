@@ -30,7 +30,7 @@
     "build": "tsc",
     "build:bundle": "node scripts/build-bundle.js",
     "build:demo": "npm run build:bundle && esbuild demo/demo.js --bundle --outfile=bundle.js --platform=browser --external:elkjs && cp demo/index.html . && cp node_modules/elkjs/lib/elk.bundled.js .",
-    "lint": "eslint lib/**/*.ts && eslint bin/**/*.js",
+    "lint": "eslint lib/**/*.ts bin/**/*.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:examples": "tsc && node --trace-warnings test/test-all.js"
@@ -44,15 +44,15 @@
   },
   "homepage": "https://github.com/paulgeorge/netlistsvg#readme",
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/clone": "^2.1.4",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.10",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
     "esbuild": "^0.27.4",
-    "eslint": "^8.57.1",
+    "eslint": "^9.39.4",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.6",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.57.1"
   }
 }
