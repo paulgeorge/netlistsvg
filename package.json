@@ -30,7 +30,6 @@
     "build": "tsc",
     "build:bundle": "node scripts/build-bundle.js",
     "build:demo": "npm run build:bundle && esbuild demo/demo.js --bundle --outfile=bundle.js --platform=browser --external:elkjs && cp demo/index.html . && cp node_modules/elkjs/lib/elk.bundled.js .",
-    "test-examples": "tsc && node --trace-warnings test/test-all.js",
     "lint": "eslint lib/**/*.ts && eslint bin/**/*.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
