@@ -41,7 +41,7 @@ export function dumpLayout(skinData: string, yosysNetlist: Yosys.Netlist, prelay
     promise.then((graph: ElkModel.Graph) => {
         done(null, JSON.stringify(graph, null, 2));
     }).catch((reason) => {
-        throw Error(reason);
+        done(reason instanceof Error ? reason : new Error(String(reason)));
     });
 }
 
@@ -69,7 +69,7 @@ export function render(skinData: string, yosysNetlist: Yosys.Netlist, done?: ICa
             done(null, output as string);
             return output;
         }).catch((reason) => {
-            throw Error(reason);
+            done(reason instanceof Error ? reason : new Error(String(reason)));
         });
     }
     return promise;
