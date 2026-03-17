@@ -2,8 +2,6 @@ node_modules
 out.svg
 test/*.json
 test/**/*.svg
-examples/*.json
-examples/**/*.svg
 examples/**/*.png
 .yosys_extra
 built/*.test.js
