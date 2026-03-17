@@ -45,7 +45,11 @@ describe('CLI', () => {
 
     test('exits with error for nonexistent input file', () => {
         expect(() => {
-            runCli('/tmp/nonexistent_file_12345.json -o /tmp/out.svg');
+            execSync(`node ${binPath} /tmp/nonexistent_file_12345.json -o /tmp/out.svg`, {
+                encoding: 'utf-8',
+                cwd: path.join(__dirname, '..'),
+                stdio: ['pipe', 'pipe', 'pipe'],
+            });
         }).toThrow();
     });
 
