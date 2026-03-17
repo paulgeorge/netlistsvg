@@ -192,7 +192,7 @@ function addDummy(children: ElkModel.Cell[]) {
 
 function route(sourcePorts: any[], targetPorts: any[], edges: (ElkModel.Edge | ElkModel.ExtendedEdge)[], numWires: number) {
     const newEdges = (sourcePorts.flatMap((sourcePort: any) => {
-        const sourceParentKey: string = sourcePort.parentNode.key;
+        const sourceParentKey: string = sourcePort.parentNode.Key;
         const sourceKey: string = sourceParentKey + '.' + sourcePort.key;
         let edgeLabel: ElkModel.Label[];
         if (numWires > 1) {
@@ -209,7 +209,7 @@ function route(sourcePorts: any[], targetPorts: any[], edges: (ElkModel.Edge | E
             }];
         }
         return targetPorts.map((targetPort: any) => {
-            const targetParentKey: string = targetPort.parentNode.key;
+            const targetParentKey: string = targetPort.parentNode.Key;
             const targetKey: string = targetParentKey + '.' + targetPort.key;
             const id: string = 'e' + ElkModel.edgeIndex;
             const edge: ElkModel.ExtendedEdge = {
