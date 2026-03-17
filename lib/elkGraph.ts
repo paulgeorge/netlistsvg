@@ -89,6 +89,7 @@ export function buildElkGraph(module: FlatModule): ElkModel.Graph {
     });
     ElkModel.edgeIndex = 0;
     ElkModel.dummyNum = 0;
+    ElkModel.wireNameLookup = {};
     const edges: ElkModel.Edge[] = module.wires.flatMap((w) => {
         const numWires = w.netName.split(',').length - 2;
         // at least one driver and at least one rider and no laterals
