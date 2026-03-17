@@ -32,6 +32,9 @@ jobs:
       - name: Build browser bundle
         run: npm run build:bundle
 
+      - name: Lint
+        run: npm run lint
+
       - name: Run tests
         run: npm test
 
