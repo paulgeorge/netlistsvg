@@ -238,14 +238,6 @@ export interface NameToPorts {
     [netName: string]: FlatPort[];
 }
 
-interface StringToBool {
-    [s: string]: boolean;
-}
-
 export function removeDups(inStrs: string[]): string[] {
-    const map: StringToBool = {};
-    inStrs.forEach((str) => {
-        map[str] = true;
-    });
-    return Object.keys(map);
+    return [...new Set(inStrs)];
 }
