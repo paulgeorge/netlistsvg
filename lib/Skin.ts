@@ -102,7 +102,7 @@ export namespace Skin {
     }
 
     export function getProperties(): SkinProperties {
-        let vals: SkinProperties | undefined;
+        let vals: SkinProperties = {};
         onml.t(skin, {
             enter: (node: any) => {
                 if (node.name === 's:properties') {
@@ -121,16 +121,16 @@ export namespace Skin {
                         }),
                     );
                 } else if (node.name === 's:layoutEngine') {
-                    vals!.layoutEngine = node.attr;
+                    vals.layoutEngine = node.attr;
                 }
             },
         });
 
-        if (!vals!.layoutEngine) {
-            vals!.layoutEngine = {};
+        if (!vals.layoutEngine) {
+            vals.layoutEngine = {};
         }
 
-        return vals!;
+        return vals;
     }
 }
 export default Skin;
