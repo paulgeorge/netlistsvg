@@ -1,7 +1,6 @@
 import Yosys from './YosysModel';
 import Skin from './Skin';
 import Cell from './Cell';
-import _ = require('lodash');
 
 export interface FlatPort {
     key: string;
@@ -18,24 +17,24 @@ export interface Wire {
 }
 
 export class FlatModule {
-    public moduleName: string;
+    public moduleName!: string;
     public nodes: Cell[];
     public wires: Wire[];
 
     constructor(netlist: Yosys.Netlist) {
-        this.moduleName = null;
-        _.forEach(netlist.modules, (mod: Yosys.Module, name: string) => {
+        this.moduleName = null as any;
+        for (const [name, mod] of Object.entries(netlist.modules)) {
             if (mod.attributes && Number(mod.attributes.top) === 1) {
                 this.moduleName = name;
             }
-        });
+        }
         // Otherwise default the first one in the file...
         if (this.moduleName == null) {
             this.moduleName = Object.keys(netlist.modules)[0];
         }
         const top = netlist.modules[this.moduleName];
-        const ports = _.map(top.ports, Cell.fromPort);
-        const cells = _.map(top.cells, (c, key) => Cell.fromYosysCell(c, key));
+        const ports = Object.entries(top.ports).map(([name, port]) => Cell.fromPort(port, name));
+        const cells = Object.entries(top.cells).map(([key, c]) => Cell.fromYosysCell(c, key));
         this.nodes = cells.concat(ports);
         // populated by createWires
         this.wires = [];
@@ -57,8 +56,8 @@ export class FlatModule {
 
     // solves for minimal bus splits and joins and adds them to module
     public addSplitsJoins(): void {
-        const allInputs = _.flatMap(this.nodes, (n) => n.inputPortVals());
-        const allOutputs = _.flatMap(this.nodes, (n) => n.outputPortVals());
+        const allInputs = this.nodes.flatMap((n) => n.inputPortVals());
+        const allOutputs = this.nodes.flatMap((n) => n.outputPortVals());
 
         const allInputsCopy = allInputs.slice();
         const splits: SplitJoin = {};
@@ -74,9 +73,9 @@ export class FlatModule {
                 joins);
         });
 
-        this.nodes = this.nodes.concat(_.map(joins, (joinOutput, joinInputs) => {
+        this.nodes = this.nodes.concat(Object.entries(joins).map(([joinInputs, joinOutput]) => {
             return Cell.fromJoinInfo(joinInputs, joinOutput);
-        })).concat(_.map(splits, (splitOutputs, splitInput) => {
+        })).concat(Object.entries(splits).map(([splitInput, splitOutputs]) => {
             return Cell.fromSplitInfo(splitInput, splitOutputs);
         }));
     }
@@ -95,7 +94,7 @@ export class FlatModule {
                 layoutProps.genericsLaterals as boolean);
         });
         // list of unique nets
-        const nets = removeDups(_.keys(ridersByNet).concat(_.keys(driversByNet)).concat(_.keys(lateralsByNet)));
+        const nets = removeDups(Object.keys(ridersByNet).concat(Object.keys(driversByNet)).concat(Object.keys(lateralsByNet)));
         const wires: Wire[] = nets.map((net) => {
             const drivers: FlatPort[] = driversByNet[net] || [];
             const riders: FlatPort[] = ridersByNet[net] || [];
@@ -137,7 +136,7 @@ function arrayContains(needle: string, haystack: string | string[]): boolean {
 // returns the index of the string that contains a substring
 // given arrhaystack, an array of strings
 function indexOfContains(needle: string, arrhaystack: string[]): number {
-    return _.findIndex(arrhaystack, (haystack: string) => {
+    return arrhaystack.findIndex((haystack: string) => {
         return arrayContains(needle, haystack);
     });
 }
@@ -159,7 +158,7 @@ export function addToDefaultDict(dict: any, key: string, value: any): void {
 function getIndicesString(bitstring: string,
                           query: string,
                           start: number): string {
-    const splitStart: number = _.max([bitstring.indexOf(query), start]);
+    const splitStart: number = Math.max(bitstring.indexOf(query), start);
     const startIndex: number = bitstring.substring(0, splitStart).split(',').length - 1;
     const endIndex: number = startIndex + query.split(',').length - 3;
 
@@ -174,70 +173,71 @@ function getIndicesString(bitstring: string,
 function gather(inputs: string[],  // all inputs
                 outputs: string[], // all outputs
                 toSolve: string, // an input array we are trying to solve
-                start: number,   // index of toSolve to start from
-                end: number,     // index of toSolve to end at
+                initialStart: number,   // index of toSolve to start from
+                initialEnd: number,     // index of toSolve to end at
                 splits: SplitJoin,  // container collecting the splits
                 joins: SplitJoin): void {  // container collecting the joins
-    // remove myself from outputs list if present
-    const outputIndex: number = outputs.indexOf(toSolve);
-    if (outputIndex !== -1) {
-        outputs.splice(outputIndex, 1);
-    }
-
-    // This toSolve is compconste
-    if (start >= toSolve.length || end - start < 2) {
-        return;
-    }
-
-    const query: string = toSolve.slice(start, end);
-
-    // are there are perfect matches?
-    if (arrayContains(query, inputs)) {
-        if (query !== toSolve) {
-            addToDefaultDict(joins, toSolve, getIndicesString(toSolve, query, start));
+    let start: number = initialStart;
+    let end: number = initialEnd;
+    let finished = false;
+    while (!finished) {
+        // remove myself from outputs list if present
+        const outputIndex: number = outputs.indexOf(toSolve);
+        if (outputIndex !== -1) {
+            outputs.splice(outputIndex, 1);
         }
-        gather(inputs, outputs, toSolve, end - 1, toSolve.length, splits, joins);
-        return;
-    }
-    const index: number = indexOfContains(query, inputs);
-    // are there any partial matches?
-    if (index !== -1) {
-        if (query !== toSolve) {
-            addToDefaultDict(joins, toSolve, getIndicesString(toSolve, query, start));
+
+        // This toSolve is compconste
+        if (start >= toSolve.length || end - start < 2) {
+            finished = true;
+            continue;
         }
-        // found a split
-        addToDefaultDict(splits, inputs[index], getIndicesString(inputs[index], query, 0));
-        // we can match to this now
-        inputs.push(query);
-        gather(inputs, outputs, toSolve, end - 1, toSolve.length, splits, joins);
-        return;
-    }
-    // are there any output matches?
-    if (indexOfContains(query, outputs) !== -1) {
-        if (query !== toSolve) {
-            // add to join
-            addToDefaultDict(joins, toSolve, getIndicesString(toSolve, query, start));
+
+        const query: string = toSolve.slice(start, end);
+
+        // are there are perfect matches?
+        if (arrayContains(query, inputs)) {
+            if (query !== toSolve) {
+                addToDefaultDict(joins, toSolve, getIndicesString(toSolve, query, start));
+            }
+            start = end - 1;
+            end = toSolve.length;
+            continue;
         }
-        // gather without outputs
-        gather(inputs, [], query, 0, query.length, splits, joins);
-        inputs.push(query);
-        return;
+        const index: number = indexOfContains(query, inputs);
+        // are there any partial matches?
+        if (index !== -1) {
+            if (query !== toSolve) {
+                addToDefaultDict(joins, toSolve, getIndicesString(toSolve, query, start));
+            }
+            // found a split
+            addToDefaultDict(splits, inputs[index], getIndicesString(inputs[index], query, 0));
+            // we can match to this now
+            inputs.push(query);
+            start = end - 1;
+            end = toSolve.length;
+            continue;
+        }
+        // are there any output matches?
+        if (indexOfContains(query, outputs) !== -1) {
+            if (query !== toSolve) {
+                // add to join
+                addToDefaultDict(joins, toSolve, getIndicesString(toSolve, query, start));
+            }
+            // gather without outputs
+            gather(inputs, [], query, 0, query.length, splits, joins);
+            inputs.push(query);
+            finished = true;
+            continue;
+        }
+        end = start + query.slice(0, -1).lastIndexOf(',') + 1;
     }
-    gather(inputs, outputs, toSolve, start, start + query.slice(0, -1).lastIndexOf(',') + 1, splits, joins);
 }
 
 export interface NameToPorts {
     [netName: string]: FlatPort[];
 }
 
-interface StringToBool {
-    [s: string]: boolean;
-}
-
 export function removeDups(inStrs: string[]): string[] {
-    const map: StringToBool = {};
-    inStrs.forEach((str) => {
-        map[str] = true;
-    });
-    return _.keys(map);
+    return [...new Set(inStrs)];
 }

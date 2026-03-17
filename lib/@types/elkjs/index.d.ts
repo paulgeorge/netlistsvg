@@ -63,10 +63,6 @@ declare module 'elkjs' {
         y: number;
     }
 
-    interface ElkOptions {
-        layoutOptions: ElkLayoutOptions;
-    }
-
     class ELK {
         public layout(Graph, ElkOptions): Promise<Graph>;
     }

@@ -1,32 +1,29 @@
-[![Linux Build Status](https://travis-ci.org/nturley/netlistsvg.svg?branch=master)](https://travis-ci.org/nturley/netlistsvg)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/heijuq5nhw9m7rib/branch/master?svg=true)](https://ci.appveyor.com/project/nturley/netlistsvg/branch/master)
-[![Gitter chat](https://badges.gitter.im/nturley/netlistsvg.png)](https://gitter.im/netlistsvg)
+[![CI](https://github.com/paulgeorge/netlistsvg/actions/workflows/ci.yml/badge.svg)](https://github.com/paulgeorge/netlistsvg/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/netlistsvg.svg)](https://badge.fury.io/js/netlistsvg)
-![npm](https://img.shields.io/npm/dm/netlistsvg.svg)
 
 # netlistsvg
-draws an SVG schematic from a [yosys](https://github.com/yosyshq/yosys) JSON netlist. This can be generated [the `write_json` command](https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/write_json.html). It uses [elkjs](https://github.com/OpenKieler/elkjs) for layout.
+
+> **Maintained fork of [nturley/netlistsvg](https://github.com/nturley/netlistsvg)**, modernized with TypeScript 5 strict mode, no lodash dependency, updated packages, and expanded test coverage.
+
+Draws an SVG schematic from a [Yosys](https://github.com/yosyshq/yosys) JSON netlist. This can be generated with [the `write_json` command](https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/write_json.html). It uses [elkjs](https://github.com/OpenKieler/elkjs) for layout.
 
 You can see an online demo [here](https://nturley.github.io/netlistsvg)
 
 # Installation/Usage Instructions
 
+## Requirements
+
+Node.js 20 or later.
+
 ## Command Line Interface
-Install nodejs if isn't already installed.
 
-To install the latest version from npm:
+To install from source:
 ```sh
-npm install -g netlistsvg
-```
-
-To install the latest version from source:
-```sh
-git clone https://github.com/nturley/netlistsvg
+git clone https://github.com/paulgeorge/netlistsvg
 cd netlistsvg
-npm install # install dependencies
-sudo npm install -g . # install netlistsvg to system
-
-sudo npm uninstall -g netlistsvg # uninstall from system
+npm install
+npx tsc
+sudo npm install -g .
 ```
 
 You can execute netlistsvg like this.
@@ -36,6 +33,9 @@ netlistsvg input_json_file [-o output_svg_file] [--skin skin_file]
 The default value for the output file is out.svg.
 
 Should work on Linux, OSX, and Windows. Running the build scripts (makefiles and the web demo) is easiest on Linux and OSX.
+
+## Install via Homebrew
+On macOS and Linux netlistsvg is also available via the [Homebrew package manager](https://brew.sh/). It can be installed with the command <code>brew install netlistsvg</code>.
 
 ## Web bundle
 
@@ -306,7 +306,7 @@ Here's an digital netlist produced by Yosys along with the diagram that netlists
 ```
 </details>
 
-![example](https://raw.githubusercontent.com/nturley/netlistsvg/master/doc/up3down5.svg?sanitize=true)
+![example](doc/up3down5.svg)
 
 You can also write out the JSON by hand, of course. We support [JSON5](https://json5.org) syntax.
 
@@ -459,16 +459,16 @@ Here's an analog example.
 ```
 </details>
 
-![example](https://raw.githubusercontent.com/nturley/netlistsvg/master/doc/and.svg?sanitize=true)
+![example](doc/and.svg)
 
 ## Skin File
 It pulls the node icons and configuration options from a SVG skin file. This our default digital skin file.
 
-<img src="https://raw.githubusercontent.com/nturley/netlistsvg/master/lib/default.svg?sanitize=true">
+<img src="lib/default.svg">
 
 This is our analog skin file.
 
-<img src="https://raw.githubusercontent.com/nturley/netlistsvg/master/lib/analog.svg?sanitize=true">
+<img src="lib/analog.svg">
 
 A skin file can use style tags or inline CSS to style the elements. That will be copied onto the output file. A skin file also defines a library of components to use. Each component has an alias list. It will use that component as a template for any cell with that type that it encounters. Each component defines the position and id of each of its ports so we know where to attach the wires to.
 
@@ -558,7 +558,7 @@ If the cell has a WIDTH parameter greater than 1, `-bus` will be appended to the
 ELK is using a layered approach (Sugiyama, Ganser), similar to dot in the Graphviz package. You can read about their algorithm here: https://rtsys.informatik.uni-kiel.de/%7Ebiblio/downloads/papers/jvlc13.pdf
 
 # Status
-We are getting close to the 1.0 release. At that point, the skin file format will be considered specified and breaking changes will only happen on major version bumps.
+This is a modernized fork (v2.0.0-alpha) with active maintenance. The skin file format is considered stable; breaking changes only happen on major version bumps.
 
 ## Generating `input_json_file` with Yosys
 

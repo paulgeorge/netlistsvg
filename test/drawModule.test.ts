@@ -1,6 +1,5 @@
 import { ElkModel } from '../lib/elkGraph';
 import { removeDummyEdges } from '../lib/drawModule';
-import _ = require('lodash');
 
 test('remove dummy edges outputs', () => {
     const e2end = {x: 249, y: 162};
@@ -73,14 +72,14 @@ test('remove dummy edges outputs', () => {
     const e3 = testGraph.edges.find((edge) => edge.id === 'e3') as ElkModel.Edge;
     const e4 = testGraph.edges.find((edge) => edge.id === 'e4') as ElkModel.Edge;
     // edge end points should stay the same
-    expect(e2.sections[0].endPoint).toEqual(e2end);
-    expect(e3.sections[0].endPoint).toEqual(e3end);
-    expect(e4.sections[0].endPoint).toEqual(e4end);
+    expect(e2.sections![0].endPoint).toEqual(e2end);
+    expect(e3.sections![0].endPoint).toEqual(e3end);
+    expect(e4.sections![0].endPoint).toEqual(e4end);
     // edge start points should be lowjunct
-    expect(e2.sections[0].startPoint).toEqual(highJunct);
-    expect(e3.sections[0].startPoint).toEqual(highJunct);
-    expect(e4.sections[0].startPoint).toEqual(highJunct);
-    const junctionPoints = _.flatMap(testGraph.edges, (edge) => (edge as ElkModel.Edge).junctionPoints || []);
+    expect(e2.sections![0].startPoint).toEqual(highJunct);
+    expect(e3.sections![0].startPoint).toEqual(highJunct);
+    expect(e4.sections![0].startPoint).toEqual(highJunct);
+    const junctionPoints = testGraph.edges.flatMap((edge) => (edge as ElkModel.Edge).junctionPoints || []);
     expect(junctionPoints.length).toEqual(1);
 });
 
@@ -158,14 +157,14 @@ test('remove dummy edges inputs', () => {
     const e6 = testGraph.edges.find((edge) => edge.id === 'e6') as ElkModel.Edge;
     const e7 = testGraph.edges.find((edge) => edge.id === 'e7') as ElkModel.Edge;
     // edge start points should stay the same
-    expect(e5.sections[0].startPoint).toEqual(e5Start);
-    expect(e6.sections[0].startPoint).toEqual(e6Start);
-    expect(e7.sections[0].startPoint).toEqual(e7Start);
+    expect(e5.sections![0].startPoint).toEqual(e5Start);
+    expect(e6.sections![0].startPoint).toEqual(e6Start);
+    expect(e7.sections![0].startPoint).toEqual(e7Start);
     // edge end points should now be the junction
-    expect(e5.sections[0].endPoint).toEqual(junctPoint);
-    expect(e6.sections[0].endPoint).toEqual(junctPoint);
-    expect(e7.sections[0].endPoint).toEqual(junctPoint);
+    expect(e5.sections![0].endPoint).toEqual(junctPoint);
+    expect(e6.sections![0].endPoint).toEqual(junctPoint);
+    expect(e7.sections![0].endPoint).toEqual(junctPoint);
     // there should still be one junction
-    const junctionPoints = _.flatMap(testGraph.edges, (edge) => (edge as ElkModel.Edge).junctionPoints || []);
+    const junctionPoints = testGraph.edges.flatMap((edge) => (edge as ElkModel.Edge).junctionPoints || []);
     expect(junctionPoints.length).toEqual(1);
 });

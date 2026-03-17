@@ -2,7 +2,6 @@ import { SigsByConstName, NameToPorts, addToDefaultDict } from './FlatModule';
 import Yosys from './YosysModel';
 import Skin from './Skin';
 import {Port} from './Port';
-import _ = require('lodash');
 import { ElkModel } from './elkGraph';
 import clone = require('clone');
 import onml = require('onml');
@@ -26,7 +25,7 @@ export default class Cell {
         const template = Skin.findSkinType(yCell.type);
         const templateInputPids = Skin.getInputPids(template);
         const templateOutputPids = Skin.getOutputPids(template);
-        const ports: Port[] = _.map(yCell.connections, (conn, portName) => {
+        const ports: Port[] = Object.entries(yCell.connections).map(([portName, conn]) => {
             return new Port(portName, conn);
         });
         let inputPorts = ports.filter((port) => port.keyIn(templateInputPids));
@@ -37,7 +36,7 @@ export default class Cell {
             inputPorts = ports.filter((port) => port.keyIn(inputPids));
             outputPorts = ports.filter((port) => port.keyIn(outputPids));
         }
-        return new Cell(name, yCell.type, inputPorts, outputPorts, yCell.attributes);
+        return new Cell(name, yCell.type, inputPorts, outputPorts, yCell.attributes || {});
     }
 
     public static fromConstantInfo(name: string, constants: number[]): Cell {
@@ -83,7 +82,7 @@ export default class Cell {
         if ('parameters' in yCell) {
             // if it has a WIDTH parameter greater than one
             // and doesn't have an address parameter (not a memory cell)
-            if ('WIDTH' in yCell.parameters &&
+            if (yCell.parameters && 'WIDTH' in yCell.parameters &&
                 yCell.parameters.WIDTH > 1 &&
                 !('ADDR' in yCell.parameters)) {
                 // turn into a bus version
@@ -133,8 +132,8 @@ export default class Cell {
     }
 
     public maxOutVal(atLeast: number): number {
-        const maxVal: number = _.max(this.outputPorts.map((op) => op.maxVal()));
-        return _.max([maxVal, atLeast]);
+        const maxVal: number = Math.max(...this.outputPorts.map((op) => op.maxVal()));
+        return Math.max(maxVal, atLeast);
     }
 
     public findConstants(sigsByConstantName: SigsByConstName,
@@ -179,7 +178,7 @@ export default class Cell {
         });
     }
 
-    public getValueAttribute(): string {
+    public getValueAttribute(): string | null {
         if (this.attributes && this.attributes.value) {
             return this.attributes.value;
         }
@@ -193,7 +192,7 @@ export default class Cell {
     public buildElkChild(): ElkModel.Cell {
         const template = this.getTemplate();
         const type: string = template[1]['s:type'];
-        const layoutAttrs = { 'org.eclipse.elk.portConstraints': 'FIXED_POS' };
+        const layoutAttrs: { [key: string]: any } = { 'org.eclipse.elk.portConstraints': 'FIXED_POS' };
         let fixedPosX = null;
         let fixedPosY = null;
         for (const attr in this.attributes) {
@@ -266,7 +265,7 @@ export default class Cell {
     public render(cell: ElkModel.Cell): onml.Element {
         const template = this.getTemplate();
         const tempclone = clone(template);
-        for (const label of cell.labels) {
+        for (const label of cell.labels || []) {
             const labelIDSplit = label.id.split('.');
             const attrName = labelIDSplit[labelIDSplit.length - 1];
             setTextAttribute(tempclone, attrName, label.text);
@@ -327,7 +326,7 @@ export default class Cell {
                 portClone[portClone.length - 1][2] = port.Key;
                 portClone[1].transform = 'translate(' + inPorts[1][1]['s:x'] + ','
                     + (instartY + i * ingap) + ')';
-                portClone[1].id = 'port_' + port.parentNode.Key + '~' + port.Key;
+                portClone[1].id = 'port_' + port.parentNode!.Key + '~' + port.Key;
                 tempclone.push(portClone);
             });
             this.outputPorts.forEach((port, i) => {
@@ -335,7 +334,7 @@ export default class Cell {
                 portClone[portClone.length - 1][2] = port.Key;
                 portClone[1].transform = 'translate(' + outPorts[1][1]['s:x'] + ','
                     + (outstartY + i * outgap) + ')';
-                portClone[1].id = 'port_' + port.parentNode.Key + '~' + port.Key;
+                portClone[1].id = 'port_' + port.parentNode!.Key + '~' + port.Key;
                 tempclone.push(portClone);
             });
             // first child of generic must be a text node.
@@ -345,9 +344,9 @@ export default class Cell {
         return tempclone;
     }
 
-    private addLabels(template, cell: ElkModel.Cell) {
+    private addLabels(template: any, cell: ElkModel.Cell) {
         onml.traverse(template, {
-            enter: (node) => {
+            enter: (node: any) => {
                 if (node.name === 'text' && node.attr['s:attribute']) {
                     const attrName = node.attr['s:attribute'];
                     let newString;
@@ -364,7 +363,7 @@ export default class Cell {
                     } else {
                         return;
                     }
-                    cell.labels.push({
+                    cell.labels!.push({
                         id: this.key + '.label.' + attrName,
                         text: newString,
                         x: node.attr.x,
@@ -381,7 +380,7 @@ export default class Cell {
         const template = this.getTemplate();
         const inPorts = Skin.getPortsWithPrefix(template, 'in');
         const outPorts = Skin.getPortsWithPrefix(template, 'out');
-        if (this.inputPorts.length > this.outputPorts.length) {
+        if (this.inputPorts.length > this.outputPorts.length && inPorts.length > 1) {
             const gap = Number(inPorts[1][1]['s:y']) - Number(inPorts[0][1]['s:y']);
             return Number(template[1]['s:height']) + gap * (this.inputPorts.length - 2);
         }
@@ -394,9 +393,9 @@ export default class Cell {
 
 }
 
-function setGenericSize(tempclone, height) {
+function setGenericSize(tempclone: any, height: number) {
     onml.traverse(tempclone, {
-        enter: (node) => {
+        enter: (node: any) => {
             if (node.name === 'rect' && node.attr['s:generic'] === 'body') {
                 node.attr.height = height;
             }
@@ -404,9 +403,9 @@ function setGenericSize(tempclone, height) {
     });
 }
 
-function setTextAttribute(tempclone, attribute, value) {
+function setTextAttribute(tempclone: any, attribute: string, value: string) {
     onml.traverse(tempclone, {
-        enter: (node) => {
+        enter: (node: any) => {
             if (node.name === 'text' && node.attr['s:attribute'] === attribute) {
                 node.full[2] = value;
             }
@@ -414,9 +413,9 @@ function setTextAttribute(tempclone, attribute, value) {
     });
 }
 
-function setClass(tempclone, searchKey, className) {
+function setClass(tempclone: any, searchKey: string, className: string) {
     onml.traverse(tempclone, {
-        enter: (node) => {
+        enter: (node: any) => {
             const currentClass: string = node.attr.class;
             if (currentClass && currentClass.includes(searchKey)) {
                 node.attr.class = currentClass.replace(searchKey, className);
