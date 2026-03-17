@@ -1,5 +1,4 @@
 'use strict';
-var superagent = require('superagent');
 var json5 = require('json5');
 var netlistSvg = require('../built');
 var up3down5 = require('../test/digital/up3down5.json');
@@ -15,10 +14,12 @@ var svgArea = document.querySelector('#svgArea');
 textarea.value = json5.stringify(up3down5, null, 4);
 
 skins.forEach(function(skinPath, i) {
-    superagent.get(skinPath).end(function(err, r) {
+    fetch(skinPath).then(function(r) {
+        return r.text();
+    }).then(function(text) {
         var option = document.createElement('option');
         option.selected = i === 0;
-        option.value = r.text;
+        option.value = text;
         option.text = skinPath;
         skinSelect.append(option);
     });
