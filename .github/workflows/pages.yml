@@ -6,14 +6,16 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -38,14 +40,24 @@ jobs:
 
       - name: Assemble deploy directory
         run: |
-          mkdir -p deploy
-          cp index.html deploy/
-          cp bundle.js deploy/
-          cp elk.bundled.js deploy/
-          cp docs/index.html deploy/gallery.html
+          mkdir -p _site
+          cp index.html _site/
+          cp bundle.js _site/
+          cp elk.bundled.js _site/
+          cp docs/index.html _site/gallery.html
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./deploy
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
