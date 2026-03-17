@@ -1,9 +1,12 @@
 {
-  "name": "netlistsvg",
-  "version": "2.0.0-alpha.1",
-  "description": "rendering a schematic from a netlist",
+  "name": "@paulgeorge/netlistsvg",
+  "version": "1.0.0-alpha.1",
+  "description": "draws an SVG schematic from a JSON netlist",
   "main": "built/index.js",
-  "author": "Neil Turley",
+  "author": "Paul George",
+  "contributors": [
+    "Neil Turley <nturley@users.noreply.github.com>"
+  ],
   "license": "MIT",
   "dependencies": {
     "ajv": "^8.17.1",
