@@ -147,3 +147,36 @@
   - 0 npm audit vulnerabilities
   - Package bumped to v2.0.0-alpha.1
   - Docs: CLAUDE.md, CONTRIBUTING.md, README updated, PR review report, hierarchical netlists roadmap
+
+## 2026-03-17 09:37:10
+- Researched elkjs changes between v0.9.3 and v0.11.1
+- Versions in range: 0.10.0, 0.10.1, 0.10.2, 0.11.0, 0.11.1
+- Key findings:
+  - No breaking changes to the `elk.layout(graph)` API pattern used by netlistsvg
+  - TypeScript `layout()` method signature enhanced with generics (backward compatible)
+  - `container` property added to `ElkEdge` type (additive, non-breaking)
+  - ELK 0.10.0 requires Java 17 (only affects ELK Java users, not elkjs)
+  - New algorithms: VertiFlex (tree layout with vertical constraints)
+  - Bug fixes relevant to netlist layout: MrTree graph bounds after component packing, self-loop label positioning, model order port sorting, rectpacking fixes, node size calculation fixes
+  - 0.10.2 and 0.11.1 are patch/security releases with minimal functional changes
+  - DisCo algorithm removed from elkjs transpilation (was breaking CI)
+
+## 2026-03-17 11:25:20
+- Implemented fixes for PR review findings (8 of 11 items, skipped 3 NOISE)
+- FIX #1: Removed silent error swallowing in render() — ELK layout errors now propagate to callers
+- FIX #4: Added missing error check when reading --layout file in CLI
+- FIX #10: Added lint step to CI workflow
+- FIX #11: Strengthened empty netlist test to assert SVG output instead of always-passing try/catch
+- IMPROVE #5: Removed dead which_dir() function from drawModule.ts
+- IMPROVE #6: Replaced for..in with for..of on edges array in drawModule.ts
+- IMPROVE #8: Initialized vals with default in Skin.getProperties() to avoid non-null assertion crash
+- IMPROVE #9: Removed duplicate test-examples script from package.json
+- All 83 tests pass, lint clean (0 errors)
+
+## 2026-03-17 11:27:37
+- Verified all fixes from Task #2: 83 tests pass, 4 snapshots pass, lint has 0 errors (10 warnings)
+- Bundle builds successfully, CLI renders mux4.json to valid SVG
+- Reviewed all 8 commits — each is clean, minimal, addresses exactly one triage finding
+- All 11 bot review findings were pre-existing issues, none introduced by our changes
+- Created .github/PULL_REQUEST_TEMPLATE.md with review scope guidance to reduce bot noise on future PRs
+- Committed triage doc (docs/pr-review-triage.md) and rebuilt JS output files
