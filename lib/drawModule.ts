@@ -18,6 +18,7 @@ export default function drawModule(g: ElkModel.Graph, module: FlatModule) {
     removeDummyEdges(g);
     let lines: onml.Element[] = (g.edges as ElkModel.Edge[]).flatMap((e: ElkModel.Edge) => {
         const netId = ElkModel.wireNameLookup[e.id];
+        if (!netId) return [];
         const numWires = netId.split(',').length - 2;
         const lineStyle = 'stroke-width: ' + (numWires > 1 ? 2 : 1);
         const netName = 'net_' + netId.slice(1, netId.length - 1) + ' width_' + numWires;
@@ -61,6 +62,7 @@ export default function drawModule(g: ElkModel.Graph, module: FlatModule) {
     let labels: any[] | undefined;
     for (const e of g.edges) {
         const netId = ElkModel.wireNameLookup[e.id];
+        if (!netId) continue;
         const numWires = netId.split(',').length - 2;
         const netName = 'net_' + netId.slice(1, netId.length - 1) +
             ' width_' + numWires +
