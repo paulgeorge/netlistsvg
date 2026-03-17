@@ -180,3 +180,14 @@
 - All 11 bot review findings were pre-existing issues, none introduced by our changes
 - Created .github/PULL_REQUEST_TEMPLATE.md with review scope guidance to reduce bot noise on future PRs
 - Committed triage doc (docs/pr-review-triage.md) and rebuilt JS output files
+
+## 2026-03-17 14:11:15
+- Fixed 7 findings from second code review on PR #1 (4 reclassified from NOISE + 3 new)
+- Fix 1: `lib/index.ts` — call `done(err)` instead of throwing on ELK failure in both `dumpLayout` and `render`
+- Fix 2: `lib/elkGraph.ts` — reset `wireNameLookup = {}` in `buildElkGraph` alongside `edgeIndex` and `dummyNum`
+- Fix 3: `lib/Cell.ts` — add `inPorts.length > 1` guard before accessing `inPorts[1]` in `getGenericHeight`
+- Fix 4: `lib/FlatModule.ts` — replace plain-object-as-set with `new Set()` in `removeDups` to avoid prototype pollution
+- Fix 5: `lib/Port.ts` — replace direct `hasOwnProperty` call with `Object.prototype.hasOwnProperty.call`; initially tried `Object.hasOwn` but TS target doesn't support es2022
+- Fix 6: `lib/elkGraph.ts` — use public `.Key` getter instead of private `.key` in `route()` function
+- Fix 7: `lib/drawModule.ts` — add null guard for `wireNameLookup` lookups in edge processing loops
+- All 12 test suites pass (83 tests, 4 snapshots)
