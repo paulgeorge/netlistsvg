@@ -1,0 +1,74 @@
+{
+  "modules": {
+    "555 Astable": {
+      "ports": {},
+      "cells": {
+        "vcc1": {
+          "type": "vcc",
+          "port_directions": { "A": "output" },
+          "connections": { "A": [1] }
+        },
+        "R1": {
+          "type": "r_v",
+          "port_directions": { "A": "input", "B": "output" },
+          "connections": { "A": [1], "B": [10] },
+          "attributes": { "ref": "R1", "value": "1k" }
+        },
+        "R2": {
+          "type": "r_v",
+          "port_directions": { "A": "input", "B": "output" },
+          "connections": { "A": [10], "B": [20] },
+          "attributes": { "ref": "R2", "value": "10k" }
+        },
+        "C1": {
+          "type": "c_v",
+          "port_directions": { "A": "input", "B": "output" },
+          "connections": { "A": [20], "B": [30] },
+          "attributes": { "ref": "C1", "value": "10uF" }
+        },
+        "U1": {
+          "type": "generic",
+          "port_directions": {
+            "VCC": "input",
+            "DIS": "input",
+            "THR": "input",
+            "TRG": "input",
+            "OUT": "output",
+            "GND": "output"
+          },
+          "connections": {
+            "VCC": [1],
+            "DIS": [10],
+            "THR": [20],
+            "TRG": [20],
+            "OUT": [40],
+            "GND": [30]
+          },
+          "attributes": { "ref": "U1", "value": "555" }
+        },
+        "R3": {
+          "type": "r_v",
+          "port_directions": { "A": "input", "B": "output" },
+          "connections": { "A": [40], "B": [50] },
+          "attributes": { "ref": "R3", "value": "470R" }
+        },
+        "LED1": {
+          "type": "d_led_v",
+          "port_directions": { "+": "input", "-": "output" },
+          "connections": { "+": [50], "-": [60] },
+          "attributes": { "ref": "LED1" }
+        },
+        "gnd1": {
+          "type": "gnd",
+          "port_directions": { "A": "input" },
+          "connections": { "A": [30] }
+        },
+        "gnd2": {
+          "type": "gnd",
+          "port_directions": { "A": "input" },
+          "connections": { "A": [60] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "modules": {
+    "Power Supply": {
+      "ports": {
+        "AC_IN": {
+          "direction": "input",
+          "bits": [1]
+        },
+        "DC_OUT": {
+          "direction": "output",
+          "bits": [60]
+        }
+      },
+      "cells": {
+        "D1": {
+          "type": "d_v",
+          "port_directions": { "+": "input", "-": "output" },
+          "connections": { "+": [1], "-": [10] }
+        },
+        "D2": {
+          "type": "d_v",
+          "port_directions": { "+": "input", "-": "output" },
+          "connections": { "+": [20], "-": [1] }
+        },
+        "D3": {
+          "type": "d_v",
+          "port_directions": { "+": "input", "-": "output" },
+          "connections": { "+": [10], "-": [30] }
+        },
+        "D4": {
+          "type": "d_v",
+          "port_directions": { "+": "input", "-": "output" },
+          "connections": { "+": [20], "-": [30] }
+        },
+        "C1": {
+          "type": "c_v",
+          "port_directions": { "A": "input", "B": "output" },
+          "connections": { "A": [10], "B": [20] },
+          "attributes": { "ref": "C1", "value": "1000uF" }
+        },
+        "REG": {
+          "type": "generic",
+          "port_directions": { "IN": "input", "OUT": "output", "GND": "output" },
+          "connections": { "IN": [10], "OUT": [50], "GND": [20] },
+          "attributes": { "ref": "U1", "value": "7805" }
+        },
+        "C2": {
+          "type": "c_v",
+          "port_directions": { "A": "input", "B": "output" },
+          "connections": { "A": [50], "B": [20] },
+          "attributes": { "ref": "C2", "value": "10uF" }
+        },
+        "R_load": {
+          "type": "r_v",
+          "port_directions": { "A": "input", "B": "output" },
+          "connections": { "A": [50], "B": [20] },
+          "attributes": { "ref": "R_LOAD", "value": "100R" }
+        },
+        "gnd1": {
+          "type": "gnd",
+          "port_directions": { "A": "input" },
+          "connections": { "A": [20] }
+        },
+        "vout_tap": {
+          "type": "r_h",
+          "port_directions": { "A": "input", "B": "output" },
+          "connections": { "A": [50], "B": [60] },
+          "attributes": { "ref": "", "value": "" }
+        }
+      }
+    }
+  }
+}
