@@ -35,6 +35,7 @@ function parseFiles(skinPath, netlistPath, elkJsonPath, callback) {
             if (err) throw err;
             if (elkJsonPath) {
                 fs.readFile(elkJsonPath, (err, elkString) => {
+                    if (err) throw err;
                     callback(skinData, netlistData, json5.parse(elkString));
                 });
             } else {
