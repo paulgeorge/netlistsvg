@@ -1,10 +1,9 @@
 import { ElkModel } from './elkGraph';
-import { FlatModule, removeDups } from './FlatModule';
+import { FlatModule } from './FlatModule';
 import Cell from './Cell';
 import Skin from './Skin';
 
 import onml = require('onml');
-import assert = require('assert');
 
 enum WireDirection {
     Up, Down, Left, Right,
