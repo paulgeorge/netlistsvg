@@ -40,14 +40,9 @@ describe('edge cases', () => {
                     },
                 },
             };
-            // Should either render an empty SVG or throw gracefully
-            try {
-                const result = await render(skinData, netlist);
-                expect(typeof result).toBe('string');
-            } catch (e) {
-                // acceptable to throw for empty netlist
-                expect(e).toBeDefined();
-            }
+            const result = await render(skinData, netlist);
+            expect(typeof result).toBe('string');
+            expect(result).toContain('<svg');
         });
     });
 
