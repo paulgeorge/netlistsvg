@@ -158,6 +158,7 @@ function buildHtml() {
   <p class="subtitle">
     SVG schematics rendered from Yosys JSON netlists using
     <a href="https://github.com/paulgeorge/netlistsvg">netlistsvg</a>.
+    Try the <a href="index.html">Interactive Demo</a> to render your own.
   </p>
 
   <h2>Digital Circuits</h2>
