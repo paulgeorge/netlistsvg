@@ -2,6 +2,10 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testPathIgnorePatterns: ['/node_modules/', '/built/'],
+  reporters: [
+    'default',
+    ...(process.env.GITHUB_ACTIONS ? ['github-actions'] : []),
+  ],
   collectCoverageFrom: [
     'lib/**/*.ts',
     '!lib/@types/**',
