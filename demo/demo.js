@@ -1,7 +1,7 @@
 'use strict';
 var json5 = require('json5');
 var netlistSvg = require('../built');
-var up3down5 = require('../test/digital/up3down5.json');
+var raspberryPi2 = require('../examples/digital/raspberry_pi2.json');
 
 var skins = ['lib/default.svg', 'lib/analog.svg'];
 
@@ -11,7 +11,7 @@ var renderButton = document.querySelector('#renderButton');
 var formatButton = document.querySelector('#formatButton');
 var svgArea = document.querySelector('#svgArea');
 
-textarea.value = json5.stringify(up3down5, null, 4);
+textarea.value = json5.stringify(raspberryPi2, null, 4);
 
 skins.forEach(function(skinPath, i) {
     fetch(skinPath).then(function(r) {

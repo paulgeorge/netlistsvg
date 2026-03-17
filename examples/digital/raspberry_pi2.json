@@ -1,0 +1,109 @@
+{
+    "modules": {
+        "raspberry_pi2": {
+            "ports": {
+                "USB_PWR": { "direction": "input", "bits": [2] },
+                "HDMI_OUT": { "direction": "output", "bits": [20] },
+                "USB0": { "direction": "output", "bits": [30] },
+                "USB1": { "direction": "output", "bits": [31] },
+                "USB2": { "direction": "output", "bits": [32] },
+                "USB3": { "direction": "output", "bits": [33] },
+                "ETH": { "direction": "output", "bits": [40] },
+                "GPIO": { "direction": "output", "bits": [50, 51, 52, 53] },
+                "CSI": { "direction": "input", "bits": [60] },
+                "DSI": { "direction": "output", "bits": [61] },
+                "SD_CARD": { "direction": "input", "bits": [70] }
+            },
+            "cells": {
+                "pwr_reg": {
+                    "type": "$_BUF_",
+                    "port_directions": { "A": "input", "Y": "output" },
+                    "connections": { "A": [2], "Y": [3] },
+                    "attributes": { "name": "PWR_REG" }
+                },
+                "bcm2836": {
+                    "type": "bcm2836",
+                    "port_directions": {
+                        "VCC": "input",
+                        "SDIO": "input",
+                        "CAM": "input",
+                        "ARM_OUT": "output",
+                        "GPU_OUT": "output",
+                        "PERIPH": "output",
+                        "GPIO_BUS": "output",
+                        "DISP": "output"
+                    },
+                    "connections": {
+                        "VCC": [3],
+                        "SDIO": [70],
+                        "CAM": [60],
+                        "ARM_OUT": [10],
+                        "GPU_OUT": [11],
+                        "PERIPH": [12],
+                        "GPIO_BUS": [13],
+                        "DISP": [61]
+                    }
+                },
+                "sdram": {
+                    "type": "sdram",
+                    "port_directions": {
+                        "DATA": "input",
+                        "CTRL": "input"
+                    },
+                    "connections": {
+                        "DATA": [10],
+                        "CTRL": [11]
+                    }
+                },
+                "hdmi_encoder": {
+                    "type": "$_BUF_",
+                    "port_directions": { "A": "input", "Y": "output" },
+                    "connections": { "A": [11], "Y": [20] },
+                    "attributes": { "name": "HDMI_ENC" }
+                },
+                "usb_hub": {
+                    "type": "usb_hub",
+                    "port_directions": {
+                        "UPSTREAM": "input",
+                        "PORT0": "output",
+                        "PORT1": "output",
+                        "PORT2": "output",
+                        "PORT3": "output",
+                        "ETH_PORT": "output"
+                    },
+                    "connections": {
+                        "UPSTREAM": [12],
+                        "PORT0": [30],
+                        "PORT1": [31],
+                        "PORT2": [32],
+                        "PORT3": [33],
+                        "ETH_PORT": [14]
+                    }
+                },
+                "lan9514": {
+                    "type": "$_BUF_",
+                    "port_directions": { "A": "input", "Y": "output" },
+                    "connections": { "A": [14], "Y": [40] },
+                    "attributes": { "name": "LAN9514" }
+                },
+                "gpio_header": {
+                    "type": "gpio_header",
+                    "port_directions": {
+                        "BUS": "input",
+                        "P0": "output",
+                        "P1": "output",
+                        "P2": "output",
+                        "P3": "output"
+                    },
+                    "connections": {
+                        "BUS": [13],
+                        "P0": [50],
+                        "P1": [51],
+                        "P2": [52],
+                        "P3": [53]
+                    }
+                }
+            }
+        }
+    }
+}
