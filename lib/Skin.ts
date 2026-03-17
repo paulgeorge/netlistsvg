@@ -4,6 +4,7 @@ import { ElkModel } from './elkGraph';
 
 export namespace Skin {
 
+    // eslint-disable-next-line prefer-const
     export let skin: onml.Element = null as any;
 
     export function getPortsWithPrefix(template: any[], prefix: string) {
@@ -20,6 +21,7 @@ export namespace Skin {
         return ports;
     }
 
+    // eslint-disable-next-line no-inner-declarations
     function filterPortPids(template: any, filter: (attrs: any) => boolean): string[] {
         const ports = template.filter((element: any[]) => {
             const tag: string = element[0];

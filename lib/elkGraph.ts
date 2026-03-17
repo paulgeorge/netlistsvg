@@ -4,9 +4,11 @@ export namespace ElkModel {
     interface WireNameLookup {
         [edgeId: string]: string;
     }
+    /* eslint-disable prefer-const */
     export let wireNameLookup: WireNameLookup = {};
     export let dummyNum: number = 0;
     export let edgeIndex: number = 0;
+    /* eslint-enable prefer-const */
 
     export interface WirePoint {
         x: number;
@@ -229,5 +231,5 @@ function route(sourcePorts: any[], targetPorts: any[], edges: (ElkModel.Edge | E
             return edge;
         });
     }));
-    edges.push.apply(edges, newEdges);
+    edges.push(...newEdges);
 }
