@@ -380,7 +380,7 @@ export default class Cell {
         const template = this.getTemplate();
         const inPorts = Skin.getPortsWithPrefix(template, 'in');
         const outPorts = Skin.getPortsWithPrefix(template, 'out');
-        if (this.inputPorts.length > this.outputPorts.length) {
+        if (this.inputPorts.length > this.outputPorts.length && inPorts.length > 1) {
             const gap = Number(inPorts[1][1]['s:y']) - Number(inPorts[0][1]['s:y']);
             return Number(template[1]['s:height']) + gap * (this.inputPorts.length - 2);
         }
