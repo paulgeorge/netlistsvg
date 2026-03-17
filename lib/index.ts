@@ -60,8 +60,7 @@ export function render(skinData: string, yosysNetlist: Yosys.Netlist, done?: ICa
     } else {
         // otherwise use ELK to generate the layout
         promise = elk.layout(kgraph, { layoutOptions: layoutProps.layoutEngine })
-            .then((g: any) => drawModule(g, flatModule))
-            .catch((e: any) => { console.error(e); });
+            .then((g: any) => drawModule(g, flatModule));
     }
 
     // support legacy callback style
