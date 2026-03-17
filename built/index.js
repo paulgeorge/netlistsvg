@@ -57,8 +57,7 @@ function render(skinData, yosysNetlist, done, elkData) {
     else {
         // otherwise use ELK to generate the layout
         promise = elk.layout(kgraph, { layoutOptions: layoutProps.layoutEngine })
-            .then((g) => (0, drawModule_1.default)(g, flatModule))
-            .catch((e) => { console.error(e); });
+            .then((g) => (0, drawModule_1.default)(g, flatModule));
     }
     // support legacy callback style
     if (typeof done === 'function') {

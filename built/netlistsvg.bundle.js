@@ -1923,7 +1923,7 @@ var netlistsvg = (() => {
         }
         Skin2.getLowPriorityAliases = getLowPriorityAliases;
         function getProperties() {
-          let vals;
+          let vals = {};
           onml.t(Skin2.skin, {
             enter: (node) => {
               if (node.name === "s:properties") {
@@ -3102,41 +3102,38 @@ var netlistsvg = (() => {
           });
         });
         let labels;
-        for (const index in g.edges) {
-          if (Object.prototype.hasOwnProperty.call(g.edges, index)) {
-            const e = g.edges[index];
-            const netId = elkGraph_1.ElkModel.wireNameLookup[e.id];
-            const numWires = netId.split(",").length - 2;
-            const netName = "net_" + netId.slice(1, netId.length - 1) + " width_" + numWires + " busLabel_" + numWires;
-            const eLabels = e.labels;
-            if (eLabels !== void 0 && eLabels[0] !== void 0 && eLabels[0].text !== void 0) {
-              const label = [
-                [
-                  "rect",
-                  {
-                    x: eLabels[0].x + 1,
-                    y: eLabels[0].y - 1,
-                    width: (eLabels[0].text.length + 2) * 6 - 2,
-                    height: 9,
-                    class: netName,
-                    style: "fill: white; stroke: none"
-                  }
-                ],
-                [
-                  "text",
-                  {
-                    x: eLabels[0].x,
-                    y: eLabels[0].y + 7,
-                    class: netName
-                  },
-                  "/" + eLabels[0].text + "/"
-                ]
-              ];
-              if (labels !== void 0) {
-                labels = labels.concat(label);
-              } else {
-                labels = label;
-              }
+        for (const e of g.edges) {
+          const netId = elkGraph_1.ElkModel.wireNameLookup[e.id];
+          const numWires = netId.split(",").length - 2;
+          const netName = "net_" + netId.slice(1, netId.length - 1) + " width_" + numWires + " busLabel_" + numWires;
+          const eLabels = e.labels;
+          if (eLabels !== void 0 && eLabels[0] !== void 0 && eLabels[0].text !== void 0) {
+            const label = [
+              [
+                "rect",
+                {
+                  x: eLabels[0].x + 1,
+                  y: eLabels[0].y - 1,
+                  width: (eLabels[0].text.length + 2) * 6 - 2,
+                  height: 9,
+                  class: netName,
+                  style: "fill: white; stroke: none"
+                }
+              ],
+              [
+                "text",
+                {
+                  x: eLabels[0].x,
+                  y: eLabels[0].y + 7,
+                  class: netName
+                },
+                "/" + eLabels[0].text + "/"
+              ]
+            ];
+            if (labels !== void 0) {
+              labels = labels.concat(label);
+            } else {
+              labels = label;
             }
           }
         }
@@ -3304,9 +3301,7 @@ var netlistsvg = (() => {
             resolve(result);
           });
         } else {
-          promise = elk.layout(kgraph, { layoutOptions: layoutProps.layoutEngine }).then((g) => (0, drawModule_1.default)(g, flatModule)).catch((e) => {
-            console.error(e);
-          });
+          promise = elk.layout(kgraph, { layoutOptions: layoutProps.layoutEngine }).then((g) => (0, drawModule_1.default)(g, flatModule));
         }
         if (typeof done === "function") {
           promise.then((output) => {

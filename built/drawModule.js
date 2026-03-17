@@ -63,43 +63,40 @@ function drawModule(g, module) {
         });
     });
     let labels;
-    for (const index in g.edges) {
-        if (Object.prototype.hasOwnProperty.call(g.edges, index)) {
-            const e = g.edges[index];
-            const netId = elkGraph_1.ElkModel.wireNameLookup[e.id];
-            const numWires = netId.split(',').length - 2;
-            const netName = 'net_' + netId.slice(1, netId.length - 1) +
-                ' width_' + numWires +
-                ' busLabel_' + numWires;
-            const eLabels = e.labels;
-            if (eLabels !== undefined &&
-                eLabels[0] !== undefined &&
-                eLabels[0].text !== undefined) {
-                const label = [
-                    ['rect',
-                        {
-                            x: eLabels[0].x + 1,
-                            y: eLabels[0].y - 1,
-                            width: (eLabels[0].text.length + 2) * 6 - 2,
-                            height: 9,
-                            class: netName,
-                            style: 'fill: white; stroke: none',
-                        },
-                    ], ['text',
-                        {
-                            x: eLabels[0].x,
-                            y: eLabels[0].y + 7,
-                            class: netName,
-                        },
-                        '/' + eLabels[0].text + '/',
-                    ],
-                ];
-                if (labels !== undefined) {
-                    labels = labels.concat(label);
-                }
-                else {
-                    labels = label;
-                }
+    for (const e of g.edges) {
+        const netId = elkGraph_1.ElkModel.wireNameLookup[e.id];
+        const numWires = netId.split(',').length - 2;
+        const netName = 'net_' + netId.slice(1, netId.length - 1) +
+            ' width_' + numWires +
+            ' busLabel_' + numWires;
+        const eLabels = e.labels;
+        if (eLabels !== undefined &&
+            eLabels[0] !== undefined &&
+            eLabels[0].text !== undefined) {
+            const label = [
+                ['rect',
+                    {
+                        x: eLabels[0].x + 1,
+                        y: eLabels[0].y - 1,
+                        width: (eLabels[0].text.length + 2) * 6 - 2,
+                        height: 9,
+                        class: netName,
+                        style: 'fill: white; stroke: none',
+                    },
+                ], ['text',
+                    {
+                        x: eLabels[0].x,
+                        y: eLabels[0].y + 7,
+                        class: netName,
+                    },
+                    '/' + eLabels[0].text + '/',
+                ],
+            ];
+            if (labels !== undefined) {
+                labels = labels.concat(label);
+            }
+            else {
+                labels = label;
             }
         }
     }
@@ -120,27 +117,6 @@ function drawModule(g, module) {
     const elements = [styles, ...nodes, ...lines];
     const ret = ['svg', svgAttrs, ...elements];
     return onml.s(ret);
-}
-function which_dir(start, end) {
-    if (end.x === start.x && end.y === start.y) {
-        throw new Error('start and end are the same');
-    }
-    if (end.x !== start.x && end.y !== start.y) {
-        throw new Error('start and end arent orthogonal');
-    }
-    if (end.x > start.x) {
-        return WireDirection.Right;
-    }
-    if (end.x < start.x) {
-        return WireDirection.Left;
-    }
-    if (end.y > start.y) {
-        return WireDirection.Down;
-    }
-    if (end.y < start.y) {
-        return WireDirection.Up;
-    }
-    throw new Error('unexpected direction');
 }
 function findBendNearDummy(net, dummyIsSource, dummyLoc) {
     const candidates = net.map((edge) => {

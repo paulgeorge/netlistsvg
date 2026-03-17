@@ -98,7 +98,7 @@ var Skin;
     }
     Skin.getLowPriorityAliases = getLowPriorityAliases;
     function getProperties() {
-        let vals;
+        let vals = {};
         onml.t(Skin.skin, {
             enter: (node) => {
                 if (node.name === 's:properties') {
