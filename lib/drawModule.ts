@@ -59,42 +59,39 @@ export default function drawModule(g: ElkModel.Graph, module: FlatModule) {
         });
     });
     let labels: any[] | undefined;
-    for (const index in g.edges) {
-        if (Object.prototype.hasOwnProperty.call(g.edges, index)) {
-            const e = g.edges[index];
-            const netId = ElkModel.wireNameLookup[e.id];
-            const numWires = netId.split(',').length - 2;
-            const netName = 'net_' + netId.slice(1, netId.length - 1) +
-                ' width_' + numWires +
-                ' busLabel_' + numWires;
-            const eLabels = (e as ElkModel.ExtendedEdge).labels;
-            if (eLabels !== undefined &&
-                eLabels[0] !== undefined &&
-                eLabels[0].text !== undefined) {
-                const label = [
-                        ['rect',
-                            {
-                                x: eLabels[0].x + 1,
-                                y: eLabels[0].y - 1,
-                                width: (eLabels[0].text.length + 2) * 6 - 2,
-                                height: 9,
-                                class: netName,
-                                style: 'fill: white; stroke: none',
-                            },
-                        ], ['text',
-                            {
-                                x: eLabels[0].x,
-                                y: eLabels[0].y + 7,
-                                class: netName,
-                            },
-                            '/' + eLabels[0].text + '/',
-                        ],
-                    ];
-                if (labels !== undefined) {
-                    labels = labels.concat(label);
-                } else {
-                    labels = label;
-                }
+    for (const e of g.edges) {
+        const netId = ElkModel.wireNameLookup[e.id];
+        const numWires = netId.split(',').length - 2;
+        const netName = 'net_' + netId.slice(1, netId.length - 1) +
+            ' width_' + numWires +
+            ' busLabel_' + numWires;
+        const eLabels = (e as ElkModel.ExtendedEdge).labels;
+        if (eLabels !== undefined &&
+            eLabels[0] !== undefined &&
+            eLabels[0].text !== undefined) {
+            const label = [
+                    ['rect',
+                        {
+                            x: eLabels[0].x + 1,
+                            y: eLabels[0].y - 1,
+                            width: (eLabels[0].text.length + 2) * 6 - 2,
+                            height: 9,
+                            class: netName,
+                            style: 'fill: white; stroke: none',
+                        },
+                    ], ['text',
+                        {
+                            x: eLabels[0].x,
+                            y: eLabels[0].y + 7,
+                            class: netName,
+                        },
+                        '/' + eLabels[0].text + '/',
+                    ],
+                ];
+            if (labels !== undefined) {
+                labels = labels.concat(label);
+            } else {
+                labels = label;
             }
         }
     }
