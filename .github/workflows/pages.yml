@@ -1,4 +1,4 @@
-name: Deploy Gallery to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -6,16 +6,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -32,21 +30,22 @@ jobs:
       - name: Build TypeScript
         run: npm run build
 
+      - name: Build demo bundle
+        run: npm run build:demo
+
       - name: Generate gallery
         run: npm run build:gallery
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs
+      - name: Assemble deploy directory
+        run: |
+          mkdir -p deploy
+          cp index.html deploy/
+          cp bundle.js deploy/
+          cp elk.bundled.js deploy/
+          cp docs/index.html deploy/gallery.html
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy
