@@ -203,3 +203,17 @@
   - Combined lint script into single `eslint` call
 - Fixed noisy ENOENT stderr in CLI tests by piping stdio in the nonexistent file test
 - All 12 test suites pass, zero lint warnings/errors
+
+## 2026-03-17 14:55:37
+- Created 4 new analog circuit example netlists in `examples/analog/`:
+  - `audio_filter.json` — RC low-pass filter
+  - `amplifier.json` — Common emitter amplifier with coupling caps, bypass cap, voltage divider bias
+  - `555_timer.json` — 555 timer in astable mode driving an LED (uses generic type for 555 IC)
+  - `power_supply.json` — Bridge rectifier + filter cap + voltage regulator
+- Generated SVGs for all 4 examples using analog skin
+- Updated `.gitignore` to track examples JSON and SVG files (previously ignored)
+- Created `scripts/build-gallery.js` — generates `docs/index.html` with 15 inline SVGs (6 digital + 9 analog)
+- Gallery page has responsive grid layout, dark/light mode support, card-based design
+- Added `build:gallery` npm script
+- Created `.github/workflows/pages.yml` — builds gallery and deploys to GitHub Pages on push to master
+- All 83 tests pass
