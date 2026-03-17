@@ -217,3 +217,12 @@
 - Added `build:gallery` npm script
 - Created `.github/workflows/pages.yml` — builds gallery and deploys to GitHub Pages on push to master
 - All 83 tests pass
+
+## 2026-03-17 15:48:04
+- Updated Pages workflow to deploy to gh-pages branch instead of using actions/deploy-pages
+  - Switched to `peaceiris/actions-gh-pages@v4` for push-to-branch deployment
+  - Build steps: npm ci, build TS, build:bundle, build:gallery
+  - Assembles deploy dir: gallery.html (circuit gallery), index.html (interactive demo), bundle.js, elk.bundled.js, demo/demo.js
+- Added cross-links: demo links to gallery, gallery links back to interactive demo
+- Updated demo/index.html repo link from nturley to paulgeorge
+- All 83 tests pass
