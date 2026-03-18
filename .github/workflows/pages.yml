@@ -40,10 +40,12 @@ jobs:
 
       - name: Assemble deploy directory
         run: |
-          mkdir -p _site
+          mkdir -p _site/lib
           cp index.html _site/
           cp bundle.js _site/
           cp elk.bundled.js _site/
+          cp lib/default.svg _site/lib/
+          cp lib/analog.svg _site/lib/
           cp docs/index.html _site/gallery.html
 
       - name: Upload Pages artifact
