@@ -180,6 +180,13 @@ class Cell {
                 layoutAttrs[attr] = this.attributes[attr];
             }
         }
+        // Power rail alignment: VCC at top (first layer), GND at bottom (last layer)
+        if (this.type === 'vcc' || this.type === 'vee') {
+            layoutAttrs['org.eclipse.elk.layered.layering.layerConstraint'] = 'FIRST';
+        }
+        if (this.type === 'gnd') {
+            layoutAttrs['org.eclipse.elk.layered.layering.layerConstraint'] = 'LAST';
+        }
         if (type === 'join' ||
             type === 'split' ||
             type === 'generic') {
@@ -352,7 +359,7 @@ class Cell {
         const template = this.getTemplate();
         const inPorts = Skin_1.default.getPortsWithPrefix(template, 'in');
         const outPorts = Skin_1.default.getPortsWithPrefix(template, 'out');
-        if (this.inputPorts.length > this.outputPorts.length) {
+        if (this.inputPorts.length > this.outputPorts.length && inPorts.length > 1) {
             const gap = Number(inPorts[1][1]['s:y']) - Number(inPorts[0][1]['s:y']);
             return Number(template[1]['s:height']) + gap * (this.inputPorts.length - 2);
         }

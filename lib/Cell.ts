@@ -208,6 +208,13 @@ export default class Cell {
                 layoutAttrs[attr] = this.attributes[attr];
             }
         }
+        // Power rail alignment: VCC at top (first layer), GND at bottom (last layer)
+        if (this.type === 'vcc' || this.type === 'vee') {
+            layoutAttrs['org.eclipse.elk.layered.layering.layerConstraint'] = 'FIRST';
+        }
+        if (this.type === 'gnd') {
+            layoutAttrs['org.eclipse.elk.layered.layering.layerConstraint'] = 'LAST';
+        }
         if (type === 'join' ||
             type === 'split' ||
             type === 'generic') {
