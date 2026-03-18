@@ -226,3 +226,11 @@
 - Added cross-links: demo links to gallery, gallery links back to interactive demo
 - Updated demo/index.html repo link from nturley to paulgeorge
 - All 83 tests pass
+
+## 2026-03-18 07:38:21
+- Fixed power rail alignment in `alignPortsInLayers()` post-layout pass
+  - VCC nodes (vcc80 y=12, vcc86 y=52) were misaligned because postCompaction spreads them beyond the 15px y-proximity threshold
+  - Added constraint-aware layer merging: nodes sharing the same `layerConstraint` (FIRST_SEPARATE/LAST_SEPARATE) are merged into a single alignment group regardless of y-distance
+  - Result: both VCC nodes now at y=52, all GND nodes at y=319
+  - Audio filter still correct: VIN and VOUT both at y=22
+- All 83 tests pass
