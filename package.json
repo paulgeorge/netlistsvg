@@ -29,7 +29,7 @@
   "scripts": {
     "build": "tsc",
     "build:bundle": "node scripts/build-bundle.js",
-    "build:demo": "npm run build:bundle && esbuild demo/demo.js --bundle --outfile=bundle.js --platform=browser --external:elkjs && cp demo/index.html . && cp node_modules/elkjs/lib/elk.bundled.js .",
+    "build:demo": "npm run build:bundle && esbuild demo/demo.js --bundle --outfile=bundle.js --platform=browser --alias:elkjs=./demo/elkjs-shim.js && cp demo/index.html . && cp node_modules/elkjs/lib/elk.bundled.js .",
     "build:gallery": "node scripts/build-gallery.js",
     "lint": "eslint lib/**/*.ts bin/**/*.js",
     "test": "jest",
