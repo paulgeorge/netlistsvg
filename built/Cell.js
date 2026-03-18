@@ -181,11 +181,15 @@ class Cell {
             }
         }
         // Power rail alignment: VCC at top (first layer), GND at bottom (last layer)
+        // FIRST_SEPARATE/LAST_SEPARATE ensure all power nodes share one dedicated layer.
+        // nodeFlexibility NONE prevents NETWORK_SIMPLEX from shifting them vertically.
         if (this.type === 'vcc' || this.type === 'vee') {
-            layoutAttrs['org.eclipse.elk.layered.layering.layerConstraint'] = 'FIRST';
+            layoutAttrs['org.eclipse.elk.layered.layering.layerConstraint'] = 'FIRST_SEPARATE';
+            layoutAttrs['org.eclipse.elk.layered.nodePlacement.networkSimplex.nodeFlexibility'] = 'NONE';
         }
         if (this.type === 'gnd') {
-            layoutAttrs['org.eclipse.elk.layered.layering.layerConstraint'] = 'LAST';
+            layoutAttrs['org.eclipse.elk.layered.layering.layerConstraint'] = 'LAST_SEPARATE';
+            layoutAttrs['org.eclipse.elk.layered.nodePlacement.networkSimplex.nodeFlexibility'] = 'NONE';
         }
         if (type === 'join' ||
             type === 'split' ||
