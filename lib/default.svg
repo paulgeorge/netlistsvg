@@ -6,7 +6,7 @@
     <s:layoutEngine
       org.eclipse.elk.layered.spacing.nodeNodeBetweenLayers="35"
       org.eclipse.elk.spacing.nodeNode="35"
-      org.eclipse.elk.layered.layering.strategy="LONGEST_PATH"
+      org.eclipse.elk.layered.layering.strategy="NETWORK_SIMPLEX"
       org.eclipse.elk.edgeRouting="ORTHOGONAL"
       org.eclipse.elk.layered.nodePlacement.strategy="NETWORK_SIMPLEX"
       org.eclipse.elk.layered.nodePlacement.favorStraightEdges="true"
