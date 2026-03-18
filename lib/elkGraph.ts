@@ -221,11 +221,24 @@ function route(sourcePorts: any[], targetPorts: any[], edges: (ElkModel.Edge | E
                 targets: [targetKey],
             };
             ElkModel.wireNameLookup[id] = targetPort.wire.netName;
-            if (sourcePort.parentNode.type !== '$dff') {
+            const srcType = sourcePort.parentNode.type;
+            const tgtType = targetPort.parentNode.type;
+            const isPower = srcType === 'vcc' || srcType === 'vee' || srcType === 'gnd'
+                         || tgtType === 'vcc' || tgtType === 'vee' || tgtType === 'gnd';
+            const isPort = srcType.includes('Ext') || tgtType.includes('Ext');
+            const thickness = numWires > 1 ? 2 : 1;
+            if (srcType === '$dff') {
+                edge.layoutOptions = { 'org.eclipse.elk.edge.thickness': thickness };
+            } else if (isPower) {
+                edge.layoutOptions = { 'org.eclipse.elk.layered.priority.shortness': 10,
+                                       'org.eclipse.elk.edge.thickness': thickness };
+            } else if (isPort) {
                 edge.layoutOptions = { 'org.eclipse.elk.layered.priority.direction': 10,
-                                       'org.eclipse.elk.edge.thickness': (numWires > 1 ? 2 : 1) };
+                                       'org.eclipse.elk.layered.priority.straightness': 10,
+                                       'org.eclipse.elk.edge.thickness': thickness };
             } else {
-                edge.layoutOptions = { 'org.eclipse.elk.edge.thickness': (numWires > 1 ? 2 : 1) };
+                edge.layoutOptions = { 'org.eclipse.elk.layered.priority.direction': 10,
+                                       'org.eclipse.elk.edge.thickness': thickness };
             }
             ElkModel.edgeIndex += 1;
             return edge;
