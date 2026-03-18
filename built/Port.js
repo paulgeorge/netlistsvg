@@ -107,7 +107,7 @@ class Port {
         // we've been appending to nameCollector, so reverse to get const name
         const constName = nameCollector.split('').reverse().join('');
         // if the constant has already been used
-        if (signalsByConstantName.hasOwnProperty(constName)) {
+        if (Object.prototype.hasOwnProperty.call(signalsByConstantName, constName)) {
             const constSigs = signalsByConstantName[constName];
             // go back and fix signal values
             const constLength = constSigs.length;

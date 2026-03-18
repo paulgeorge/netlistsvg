@@ -39,7 +39,7 @@ function dumpLayout(skinData, yosysNetlist, prelayout, done) {
     promise.then((graph) => {
         done(null, JSON.stringify(graph, null, 2));
     }).catch((reason) => {
-        throw Error(reason);
+        done(reason instanceof Error ? reason : new Error(String(reason)));
     });
 }
 function render(skinData, yosysNetlist, done, elkData) {
@@ -65,7 +65,7 @@ function render(skinData, yosysNetlist, done, elkData) {
             done(null, output);
             return output;
         }).catch((reason) => {
-            throw Error(reason);
+            done(reason instanceof Error ? reason : new Error(String(reason)));
         });
     }
     return promise;

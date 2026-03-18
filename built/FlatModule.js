@@ -190,9 +190,5 @@ joins) {
     }
 }
 function removeDups(inStrs) {
-    const map = {};
-    inStrs.forEach((str) => {
-        map[str] = true;
-    });
-    return Object.keys(map);
+    return [...new Set(inStrs)];
 }

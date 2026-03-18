@@ -4,6 +4,7 @@ exports.ElkModel = void 0;
 exports.buildElkGraph = buildElkGraph;
 var ElkModel;
 (function (ElkModel) {
+    /* eslint-disable prefer-const */
     ElkModel.wireNameLookup = {};
     ElkModel.dummyNum = 0;
     ElkModel.edgeIndex = 0;
@@ -14,6 +15,7 @@ function buildElkGraph(module) {
     });
     ElkModel.edgeIndex = 0;
     ElkModel.dummyNum = 0;
+    ElkModel.wireNameLookup = {};
     const edges = module.wires.flatMap((w) => {
         const numWires = w.netName.split(',').length - 2;
         // at least one driver and at least one rider and no laterals
@@ -117,7 +119,7 @@ function addDummy(children) {
 }
 function route(sourcePorts, targetPorts, edges, numWires) {
     const newEdges = (sourcePorts.flatMap((sourcePort) => {
-        const sourceParentKey = sourcePort.parentNode.key;
+        const sourceParentKey = sourcePort.parentNode.Key;
         const sourceKey = sourceParentKey + '.' + sourcePort.key;
         let edgeLabel;
         if (numWires > 1) {
@@ -134,7 +136,7 @@ function route(sourcePorts, targetPorts, edges, numWires) {
                 }];
         }
         return targetPorts.map((targetPort) => {
-            const targetParentKey = targetPort.parentNode.key;
+            const targetParentKey = targetPort.parentNode.Key;
             const targetKey = targetParentKey + '.' + targetPort.key;
             const id = 'e' + ElkModel.edgeIndex;
             const edge = {
@@ -155,5 +157,5 @@ function route(sourcePorts, targetPorts, edges, numWires) {
             return edge;
         });
     }));
-    edges.push.apply(edges, newEdges);
+    edges.push(...newEdges);
 }

@@ -4,6 +4,7 @@ exports.Skin = void 0;
 const onml = require("onml");
 var Skin;
 (function (Skin) {
+    // eslint-disable-next-line prefer-const
     Skin.skin = null;
     function getPortsWithPrefix(template, prefix) {
         const ports = template.filter((e) => {
@@ -12,7 +13,7 @@ var Skin;
                     return e[1]['s:pid'].startsWith(prefix);
                 }
             }
-            catch (exception) {
+            catch {
                 // Do nothing if the SVG group doesn't have a pin id.
             }
             return false;

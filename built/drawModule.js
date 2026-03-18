@@ -23,6 +23,8 @@ function drawModule(g, module) {
     removeDummyEdges(g);
     let lines = g.edges.flatMap((e) => {
         const netId = elkGraph_1.ElkModel.wireNameLookup[e.id];
+        if (!netId)
+            return [];
         const numWires = netId.split(',').length - 2;
         const lineStyle = 'stroke-width: ' + (numWires > 1 ? 2 : 1);
         const netName = 'net_' + netId.slice(1, netId.length - 1) + ' width_' + numWires;
@@ -65,6 +67,8 @@ function drawModule(g, module) {
     let labels;
     for (const e of g.edges) {
         const netId = elkGraph_1.ElkModel.wireNameLookup[e.id];
+        if (!netId)
+            continue;
         const numWires = netId.split(',').length - 2;
         const netName = 'net_' + netId.slice(1, netId.length - 1) +
             ' width_' + numWires +
