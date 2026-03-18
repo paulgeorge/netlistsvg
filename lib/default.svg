@@ -5,8 +5,15 @@
   <s:properties>
     <s:layoutEngine
       org.eclipse.elk.layered.spacing.nodeNodeBetweenLayers="35"
-      org.eclipse.elk.spacing.nodeNode= "35"
-      org.eclipse.elk.layered.layering.strategy= "LONGEST_PATH"
+      org.eclipse.elk.spacing.nodeNode="35"
+      org.eclipse.elk.layered.layering.strategy="LONGEST_PATH"
+      org.eclipse.elk.edgeRouting="ORTHOGONAL"
+      org.eclipse.elk.layered.nodePlacement.strategy="NETWORK_SIMPLEX"
+      org.eclipse.elk.layered.nodePlacement.favorStraightEdges="true"
+      org.eclipse.elk.layered.crossingMinimization.strategy="LAYER_SWEEP"
+      org.eclipse.elk.layered.crossingMinimization.greedySwitch.type="TWO_SIDED"
+      org.eclipse.elk.layered.spacing.edgeNodeBetweenLayers="10"
+      org.eclipse.elk.spacing.edgeEdge="8"
     />
     <s:low_priority_alias val="$dff" />
   </s:properties>
