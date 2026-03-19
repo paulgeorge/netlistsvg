@@ -76,18 +76,18 @@ text {
 <!-- power -->
 
 <!-- signal -->
-<g s:type="inputExt" s:width="30" s:height="20" transform="translate(5,70)">
-  <text x="15" y="-4" class="$cell_id" s:attribute="ref">input</text>
+<g s:type="inputExt" s:width="20" s:height="14" transform="translate(5,70)">
+  <text x="10" y="-4" class="$cell_id" s:attribute="ref">input</text>
   <s:alias val="$_inputExt_"/>
-  <path d="M0,0 V20 H15 L30,10 15,0 Z" class="$cell_id"/>
-  <g s:x="30" s:y="10" s:pid="Y" s:position="right"/>
+  <path d="M0,0 V14 H10 L20,7 10,0 Z" class="$cell_id"/>
+  <g s:x="20" s:y="7" s:pid="Y" s:position="right"/>
 </g>
 
-<g s:type="outputExt" s:width="30" s:height="20" transform="translate(60,70)">
-  <text x="15" y="-4" class="$cell_id" s:attribute="ref">output</text>
+<g s:type="outputExt" s:width="20" s:height="14" transform="translate(60,70)">
+  <text x="10" y="-4" class="$cell_id" s:attribute="ref">output</text>
   <s:alias val="$_outputExt_"/>
-  <path d="M30,0 V20 H15 L0,10 15,0 Z" class="$cell_id"/>
-  <g s:x="0" s:y="10" s:pid="A" s:position="left"/>
+  <path d="M20,0 V14 H10 L0,7 10,0 Z" class="$cell_id"/>
+  <g s:x="0" s:y="7" s:pid="A" s:position="left"/>
 </g>
 <!-- signal -->
 

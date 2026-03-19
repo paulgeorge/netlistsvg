@@ -21,6 +21,10 @@ function drawModule(g, module) {
         return n.render(kchild);
     });
     removeDummyEdges(g);
+    // Deduplicate junction points across all edges — snap to 2px grid
+    // to catch near-miss duplicates (e.g. 112,182 vs 113,182)
+    const seenJunctionsGlobal = new Set();
+    const snapJunction = (v) => Math.floor(v / 3);
     let lines = g.edges.flatMap((e) => {
         const netId = elkGraph_1.ElkModel.wireNameLookup[e.id];
         if (!netId)
@@ -31,7 +35,12 @@ function drawModule(g, module) {
         return (e.sections || []).flatMap((s) => {
             let startPoint = s.startPoint;
             s.bendPoints = s.bendPoints || [];
-            let bends = s.bendPoints.map((b) => {
+            const bends = s.bendPoints.flatMap((b) => {
+                // Skip zero-length segments
+                if (startPoint.x === b.x && startPoint.y === b.y) {
+                    startPoint = b;
+                    return [];
+                }
                 const l = ['line', {
                         x1: startPoint.x,
                         x2: b.x,
@@ -41,17 +50,27 @@ function drawModule(g, module) {
                         style: lineStyle,
                     }];
                 startPoint = b;
-                return l;
+                return [l];
             });
             if (e.junctionPoints) {
-                const circles = e.junctionPoints.map((j) => ['circle', {
-                        cx: j.x,
-                        cy: j.y,
-                        r: (numWires > 1 ? 3 : 2),
-                        style: 'fill:#000',
-                        class: netName,
-                    }]);
-                bends = bends.concat(circles);
+                const circles = e.junctionPoints.flatMap((j) => {
+                    const key = snapJunction(j.x) + ',' + snapJunction(j.y);
+                    if (seenJunctionsGlobal.has(key))
+                        return [];
+                    seenJunctionsGlobal.add(key);
+                    return [['circle', {
+                                cx: j.x,
+                                cy: j.y,
+                                r: (numWires > 1 ? 3 : 2),
+                                style: 'fill:#000',
+                                class: netName,
+                            }]];
+                });
+                bends.push(...circles);
+            }
+            // Skip zero-length final segment
+            if (startPoint.x === s.endPoint.x && startPoint.y === s.endPoint.y) {
+                return bends;
             }
             const line = [['line', {
                         x1: startPoint.x,
@@ -207,14 +226,36 @@ function removeDummyEdges(g) {
             return WireDirection.Up;
         }));
         if (directions.size < 3) {
-            // remove junctions at newEnd
+            // remove junctions at or near newEnd (within 2px)
             edgeGroup.forEach((edge) => {
                 if (edge.junctionPoints) {
                     edge.junctionPoints = edge.junctionPoints.filter((junct) => {
-                        return junct.x !== newEnd.x || junct.y !== newEnd.y;
+                        return Math.abs(junct.x - newEnd.x) > 2 || Math.abs(junct.y - newEnd.y) > 2;
                     });
                 }
             });
+        }
+        // Remove zero-length segments created by dummy removal
+        for (const edge of edgeGroup) {
+            const section = edge.sections[0];
+            if (section.startPoint.x === section.endPoint.x &&
+                section.startPoint.y === section.endPoint.y &&
+                (!section.bendPoints || section.bendPoints.length === 0)) {
+                edge.sections = [];
+            }
+        }
+        // Deduplicate junction points across edge group
+        const seenJunctions = new Set();
+        for (const edge of edgeGroup) {
+            if (edge.junctionPoints) {
+                edge.junctionPoints = edge.junctionPoints.filter((junct) => {
+                    const key = Math.round(junct.x) + ',' + Math.round(junct.y);
+                    if (seenJunctions.has(key))
+                        return false;
+                    seenJunctions.add(key);
+                    return true;
+                });
+            }
         }
         dummyNum += 1;
     }
